@@ -7,16 +7,15 @@ import userimage from '../assets/userimage.jpg'
 
 
 const Layout = () => {
+  const { pathname } = useLocation();
 
-    const {pathname} = useLocation()
+  const { t, i18n } = useTranslation();
 
-    const {t, i18n} = useTranslation()
-    
-    const changeLanguage = (language) => {
-        i18n.changeLanguage(language)
-    }
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+  };
 
-    const active  = localStorage.getItem("i18nextLng")
+  const active = localStorage.getItem("i18nextLng");
 
   return (
     <div>
@@ -291,8 +290,7 @@ const Layout = () => {
 
 
     </div>
-    
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

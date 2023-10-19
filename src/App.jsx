@@ -1,54 +1,53 @@
-import React from "react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Layout from './layout/Layout'
 import Home from './pages/home/Home'
-import UserProfile from './pages/userprofile/UserProfile'
 import Explore from './pages/explore/Explore'
 import Reels from './pages/reels/Reels'
 import Messages from './pages/messages/Messages'
 import Profile from './pages/profile/Profile'
 import NotFound from './pages/notfound/NotFound'
+import SearchProfile from "./pages/searchProfile/SearchProfile"
 
 function App() {
 
   const isRouter = createBrowserRouter([
     {
       path: "/",
-      element: <Layout/>,
+      element: <Layout />,
       children: [
         {
           index: true,
-          element: <Home/>
+          element: <Home />
         },
         {
-          path: "userprofile",
-          element: <UserProfile/>
+          path: "searchprofile",
+          element: <SearchProfile />
         },
         {
           path: "explore",
-          element: <Explore/>
+          element: <Explore />
         },
         {
           path: "reels",
-          element: <Reels/>
+          element: <Reels />
         },
         {
           path: "messages",
-          element: <Messages/>
+          element: <Messages />
         },
         {
           path: "profile",
-          element: <Profile/>
+          element: <Profile />
         }
       ],
     },
     {
       path: "*",
-      element: <NotFound/>
+      element: <NotFound />
     }
   ])
 
-  return <RouterProvider router = {isRouter}/>
+  return <RouterProvider router={isRouter} />
 }
 
 export default App
