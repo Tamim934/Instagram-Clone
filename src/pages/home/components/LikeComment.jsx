@@ -7,7 +7,7 @@ import comment from "../img/comment.svg";
 
 const LikeComment = () => {
   return (
-    <div>
+    <div className="mt-2">
       <div className="flex justify-between items-center">
         <div>
           <IconButton>
@@ -102,6 +102,14 @@ const LikeComment = () => {
             </svg>
           </IconButton>
         </div>
+      </div>
+      <div className="w-[98%] mx-auto">
+        <p className="font-semibold">129 346 отметок "Нравится"</p>
+        <p>
+          <span className="font-semibold mr-2">premierzal.tj</span>
+          Производство Турция🇹🇷 под заказ доставка 7-12 дней цена 345с размер S
+          M L XL XXL предоплата 50% #azizshopсвитер
+        </p>
       </div>
     </div>
   );
