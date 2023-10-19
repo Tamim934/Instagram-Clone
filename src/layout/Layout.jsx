@@ -73,11 +73,11 @@ const Layout = () => {
             </div>
             </Link>
             
-            <Link to="/userprofile">
+            <Link to="/searchprofile">
             <div className='w-[220px] h-[56px] pt-[4px] bg-purple-300'>
                 <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer bg-slate-300'>
                 {
-                pathname === "/userprofile" ?
+                pathname === "/searchprofile" ?
                 <div className='flex items-center gap-[16px]'>
                 <svg aria-label="Поисковый запрос" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Поисковый запрос</title><path d="M18.5 10.5a8 8 0 1 1-8-8 8 8 0 0 1 8 8Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" x1="16.511" x2="21.643" y1="16.511" y2="21.643"></line></svg>
                 <span className='text-black dark:text-white text-[16px] font-bold'>Поисковый запрос</span>
