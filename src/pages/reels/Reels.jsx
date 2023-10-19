@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 
-// import OceanWave from '../../assets/ReelsImg/OceanVave.mp4'
+import OceanWave from '../../assets/ReelsImg/OceanVave.mp4'
 import userIcon from '../../assets/ReelsImg/userIcon.png'
 
 const Reels = () => {
@@ -15,7 +15,7 @@ const Reels = () => {
       <div className='text-[#fff] w-[33%] mx-auto pt-[35px] '>
         <div className="w-full h-[87vh]  rounded-[20px] flex items-end gap-[0px] mb-[40px]">
           <div className="w-[85%] md:rounded-[6px] overflow-hidden" style={{ boxShadow: "0 0 80px 0 #535252" }}>
-            <video className='h-[100%] w-[100%]' src={userIcon} autoPlay loop muted />
+            <video className='h-[100%] w-[100%]' src={OceanWave} autoPlay loop muted />
           </div>
           <div className="w-[15%] flex flex-col items-center text-center">
             <div className="mb-[15px]">
@@ -44,7 +44,7 @@ const Reels = () => {
         </div>
         <div className="w-full h-[87vh]  rounded-[20px] flex items-end gap-[0px] mb-[40px]">
           <div className="w-[85%] md:rounded-[6px] overflow-hidden" style={{ boxShadow: "0 0 80px 0 #535252" }}>
-            <video className='h-[100%] w-[100%]' src={userIcon} autoPlay loop muted />
+            <video className='h-[100%] w-[100%]' src={OceanWave} autoPlay loop muted />
           </div>
           <div className="w-[15%] flex flex-col items-center text-center">
             <div className="mb-[15px]">
@@ -73,7 +73,7 @@ const Reels = () => {
         </div>
         <div className="w-full h-[87vh]  rounded-[20px] flex items-end gap-[0px] mb-[40px]">
           <div className="w-[85%] md:rounded-[6px] overflow-hidden" style={{ boxShadow: "0 0 80px 0 #535252" }}>
-            <video className='h-[100%] w-[100%]' src={userIcon} autoPlay loop muted />
+            <video className='h-[100%] w-[100%]' src={OceanWave} autoPlay loop muted />
           </div>
           <div className="w-[15%] flex flex-col items-center text-center">
             <div className="mb-[15px]">
