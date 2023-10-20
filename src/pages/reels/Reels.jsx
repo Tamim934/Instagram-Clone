@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 
-import OceanWave from '../../assets/ReelsImg/OceanVave.mp4'
+import OceanWave from '../../assets/ReelsImg/userIcon.png'
 import userIcon from '../../assets/ReelsImg/userIcon.png'
 
 const Reels = () => {

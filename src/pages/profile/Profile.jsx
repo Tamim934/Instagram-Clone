@@ -11,7 +11,7 @@ const Profile = () => {
   return (
     <div className=' dark:bg-black dark:text-white'>
 <div className='flex justify-center max5:justify-start pt-[50px]'>
-<div className=" w-40 h-40  max5:w-20 max5:h-20 relative flex justify-center items-center rounded-full overflow-hidden">
+<div className=" w-40 h-40 max5:w-20 max5:h-20 relative flex justify-center items-center rounded-full overflow-hidden">
       <img src="/src/assets/imagesuserprofile/profileinstagram.jpeg" alt="Profile" className="absolute w-full h-full object-cover"/>
     </div>
     <div>
