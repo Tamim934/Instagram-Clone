@@ -2,7 +2,9 @@ import React from 'react'
 
 const Explore = () => {
   return (
-    <div>Explore</div>
+    <div>
+      salom Man Safiulloh
+    </div>
   )
 }
 
