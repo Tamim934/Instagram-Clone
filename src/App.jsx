@@ -17,12 +17,13 @@ function App() {
       element: <Login />
     },
     {
-      path: "home",
       element: <Layout />,
+      path: "",
       children: [
         {
           index: true,
           element: <Home />,
+
         },
         {
           path: "searchprofile",
@@ -44,10 +45,7 @@ function App() {
           path: "profile",
           element: <Profile />,
         },
-        {
-          path: "login",
-          element: <Login />,
-        },
+
       ],
     },
     {
