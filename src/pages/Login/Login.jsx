@@ -98,11 +98,11 @@ const Login = () => {
             </button>
             <div className="flex gap-[14px] items-center text-[#b6b6b6] justify-center">
               <h1 className="font-medium hidden 2xl:block">
-                -----------------------
+                ----------------
               </h1>
               <h1 className="text-[20px] font-medium">ИЛИ</h1>
               <h1 className="font-medium hidden 2xl:block">
-                ------------------------
+                ----------------
               </h1>
             </div>
             <div className="flex items-center justify-center gap-[20px] py-[20px]">
