@@ -17,7 +17,7 @@ const Layout = () => {
     };
 
     const active = localStorage.getItem("i18nextLng");
-    const user = getToken()
+    const user = getToken()?.sid
     console.log(user)
     return (
         <div>
