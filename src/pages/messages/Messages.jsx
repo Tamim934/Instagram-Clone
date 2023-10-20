@@ -465,7 +465,7 @@ const Messages = () => {
                   className="px-[30px] py-[5px] rounded-[8px] bg-[#dedede] my-[14px] font-medium hover:bg-[#c5c5c5]"
                   onClick={handleClickOpen}
                 >
-                  <Link to="/profile">Смотруть профиль</Link>
+                  <Link to="/profile">Смотреть профиль</Link>
                 </button>
               </div>
               <div className="flex gap-[20px] items-center justify-between w-[95%] m-auto border-[2px] px-[25px] py-[10px] rounded-[20px] mt-[250px]">
@@ -486,7 +486,7 @@ const Messages = () => {
                     </svg>
                   </IconButton>
                   <input
-                    className=" bg-[#EEEEEE] text-[20px] outline-none w-[100%]"
+                    className="  text-[20px] outline-none w-[100%]"
                     type="text"
                     placeholder="Напишите сообщение....."
                   />

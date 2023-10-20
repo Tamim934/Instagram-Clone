@@ -55,19 +55,24 @@ export default function TemporaryDrawer() {
           </div>
         </div>
       </div>
-      <div className="px-[24px] py-[30px]">
+      <div
+        className="px-[24px] py-[30px] h-[50vh]"
+        style={{ overflow: "auto" }}
+      >
         <div className="">
           <h1 className="text-[20px] font-semibold">Участники</h1>
-          <div className="rounded-[50%] py-[20px] flex items-center gap-[10px] mb-[60px]">
-            <img
-              className="rounded-[50%]"
-              height="56"
-              width="56"
-              alt="Аватар пользователя"
-              class="x5yr21d xl1xv1r xh8yej3"
-              referrerpolicy="origin-when-cross-origin"
-              src="https://scontent.cdninstagram.com/v/t51.2885-19/387247467_1024024805300116_8441586804864033304_n.jpg?stp=dst-jpg_s100x100&amp;_nc_cat=108&amp;ccb=1-7&amp;_nc_sid=c4dd86&amp;_nc_ohc=kIQ1hws3QLQAX_NypGM&amp;_nc_ad=z-m&amp;_nc_cid=1732&amp;_nc_ht=scontent.cdninstagram.com&amp;oh=00_AfDT-mDUKAzlNPT8EYO7Lt_5eUiRFlIVDZAowAUKPxPXRQ&amp;oe=65381C7D"
-            ></img>
+          <div className="rounded-[50%] py-[20px] flex items-center gap-[10px] mb-[60px] ">
+            <div className="rounded-3xl">
+              <img
+                className="rounded-[50%]"
+                height="66"
+                width="66"
+                alt="Аватар пользователя"
+                class="x5yr21d xl1xv1r xh8yej3 rounded-[50%]"
+                referrerpolicy="origin-when-cross-origin"
+                src="https://scontent.cdninstagram.com/v/t51.2885-19/387247467_1024024805300116_8441586804864033304_n.jpg?stp=dst-jpg_s100x100&amp;_nc_cat=108&amp;ccb=1-7&amp;_nc_sid=c4dd86&amp;_nc_ohc=kIQ1hws3QLQAX_NypGM&amp;_nc_ad=z-m&amp;_nc_cid=1732&amp;_nc_ht=scontent.cdninstagram.com&amp;oh=00_AfDT-mDUKAzlNPT8EYO7Lt_5eUiRFlIVDZAowAUKPxPXRQ&amp;oe=65381C7D"
+              ></img>
+            </div>
             <div className="">
               <h1 className="text-[17px] font-bold">mirzozoda_.i8</h1>
               <h1>Mirzozoda Mirzoali</h1>
@@ -75,7 +80,12 @@ export default function TemporaryDrawer() {
           </div>
         </div>
       </div>
-      <Divider />
+        <div className=" text-[15px] font-normal text-[red] px-[40px] py-[40px]">
+          <h1>Пожаловаться</h1>
+          <h1 className="py-[19px]">Заблокировать</h1>
+          <h1>Удалить чат</h1>
+        </div>
+      
     </Box>
   );
 
