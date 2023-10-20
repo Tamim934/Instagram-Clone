@@ -14,6 +14,10 @@ function App() {
   const isRouter = createBrowserRouter([
     {
       path: "/",
+      element: <Login />
+    },
+    {
+      path: "home",
       element: <Layout />,
       children: [
         {
