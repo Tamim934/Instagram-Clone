@@ -7,6 +7,7 @@ import Messages from './pages/messages/Messages'
 import Profile from './pages/profile/Profile'
 import NotFound from './pages/notfound/NotFound'
 import SearchProfile from "./pages/searchProfile/SearchProfile"
+import Login from "./pages/Login/Login"
 
 function App() {
 
@@ -17,35 +18,39 @@ function App() {
       children: [
         {
           index: true,
-          element: <Home />
+          element: <Home />,
         },
         {
           path: "searchprofile",
-          element: <SearchProfile />
+          element: <SearchProfile />,
         },
         {
           path: "explore",
-          element: <Explore />
+          element: <Explore />,
         },
         {
           path: "reels",
-          element: <Reels />
+          element: <Reels />,
         },
         {
           path: "messages",
-          element: <Messages />
+          element: <Messages />,
         },
         {
           path: "profile",
-          element: <Profile />
-        }
+          element: <Profile />,
+        },
+        {
+          path: "login",
+          element: <Login />,
+        },
       ],
     },
     {
       path: "*",
-      element: <NotFound />
-    }
-  ])
+      element: <NotFound />,
+    },
+  ]);
 
   return <RouterProvider router={isRouter} />
 }
