@@ -4,9 +4,16 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Switcher from '../components/Switcher'
 import userimage from '../assets/userimage.jpg'
-
+import { FileToBase64 } from '..//../src/utils/FileToBase64';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import { MicNone } from '@mui/icons-material'
 
 const Layout = () => {
+
   const { pathname } = useLocation();
 
   const { t, i18n } = useTranslation();
@@ -16,6 +23,23 @@ const Layout = () => {
   };
 
   const active = localStorage.getItem("i18nextLng");
+
+  const [open, setOpen] = React.useState(false);
+
+  const openPostModal = () => {
+    setOpen(true);
+  };
+
+  const closePostModal = () => {
+    setOpen(false);
+  };
+
+  const [postImg, setPostImg] = useState(null)
+
+//   const handlePostImage = async (event) => {
+//     let file = await FileToBase64(event.target.files[0]);
+//     setPostImage(file);
+//   };
 
   return (
     <div>
@@ -56,7 +80,7 @@ const Layout = () => {
         <div>
             <Link to="/">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-150 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/" ?
                 <div className='flex items-center gap-[16px]'>
@@ -75,7 +99,7 @@ const Layout = () => {
             
             <Link to="/searchprofile">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/searchprofile" ?
                 <div className='flex items-center gap-[16px]'>
@@ -94,7 +118,7 @@ const Layout = () => {
 
             <Link to="/explore">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/explore" ?
                 <div className='flex items-center gap-[16px]'>
@@ -113,7 +137,7 @@ const Layout = () => {
 
             <Link to="/reels">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/reels" ?
                 <div className='flex items-center gap-[16px]'>
@@ -132,7 +156,7 @@ const Layout = () => {
 
             <Link to="/messages">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/messages" ?
                 <div className='flex items-center gap-[16px]'>
@@ -150,7 +174,7 @@ const Layout = () => {
             </Link>
 
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "" ?
                 <div className='flex items-center gap-[16px]'>
@@ -167,7 +191,7 @@ const Layout = () => {
             </div>
 
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div onClick={openPostModal} className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
 
                 <div className='flex items-center gap-[16px]'>
                 <svg aria-label="Новая публикация" className='hover:w-[25px] hover:h-[25px]' class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Новая публикация</title><path d="M2 12v3.45c0 2.849.698 4.005 1.606 4.944.94.909 2.098 1.608 4.946 1.608h6.896c2.848 0 4.006-.7 4.946-1.608C21.302 19.455 22 18.3 22 15.45V8.552c0-2.849-.698-4.006-1.606-4.945C19.454 2.7 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.547 2 5.703 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="6.545" x2="17.455" y1="12.001" y2="12.001"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line></svg>
@@ -179,7 +203,7 @@ const Layout = () => {
 
             <Link to="/profile">
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
                 {
                 pathname === "/profile" ?
                 <div className='flex items-center gap-[16px]'>
@@ -202,7 +226,7 @@ const Layout = () => {
 
         <a href="https://www.threads.net/" target='_blank'>
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
 
                 <div className='flex items-center gap-[16px]'>
                 <svg aria-label="" className='hover:w-[25px] hover:h-[25px]' class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 192 192" width="24"><title></title><path class="xcslo1z" d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 174.89 56.9538 167.575 45.7381 153.317C35.2355 139.966 29.8077 120.682 29.6052 96C29.8077 71.3178 35.2355 52.0336 45.7381 38.6827C56.9538 24.4249 74.2039 17.11 97.0132 16.9405C119.988 17.1113 137.539 24.4614 149.184 38.788C154.894 45.8136 159.199 54.6488 162.037 64.9503L178.184 60.6422C174.744 47.9622 169.331 37.0357 161.965 27.974C147.036 9.60668 125.202 0.195148 97.0695 0H96.9569C68.8816 0.19447 47.2921 9.6418 32.7883 28.0793C19.8819 44.4864 13.2244 67.3157 13.0007 95.9325L13 96L13.0007 96.0675C13.2244 124.684 19.8819 147.514 32.7883 163.921C47.2921 182.358 68.8816 191.806 96.9569 192H97.0695C122.03 191.827 139.624 185.292 154.118 170.811C173.081 151.866 172.51 128.119 166.26 113.541C161.776 103.087 153.227 94.5962 141.537 88.9883ZM98.4405 129.507C88.0005 130.095 77.1544 125.409 76.6196 115.372C76.2232 107.93 81.9158 99.626 99.0812 98.6368C101.047 98.5234 102.976 98.468 104.871 98.468C111.106 98.468 116.939 99.0737 122.242 100.233C120.264 124.935 108.662 128.946 98.4405 129.507Z"></path></svg>
@@ -214,7 +238,7 @@ const Layout = () => {
             </a>
 
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div className='p-[12px] w-[220px] h-[48px] hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
+                <div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] rounded-[8px] cursor-pointer'>
 
                 <div className='flex items-center gap-[16px]'>
                 <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
@@ -225,6 +249,36 @@ const Layout = () => {
             </div>
 
         </div>
+
+        <Dialog
+        open={open}
+        onClose={closePostModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <div className='w-[]'>
+        <DialogTitle id="alert-dialog-title" sx={{margin: "auto", textAlign: "center", fontSize: "16px"}}>
+          {"Создание публикации"}
+        </DialogTitle>
+        <hr />
+        <DialogContent>
+          <div className='flex flex-col justify-center items-center gap-[24px]'>
+            <svg aria-label="Значок, соответствующий медиафайлам, например изображениям или видео" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="77" role="img" viewBox="0 0 97.6 77.3" width="96"><title>Значок, соответствующий медиафайлам, например изображениям или видео</title><path d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z" fill="currentColor"></path><path d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z" fill="currentColor"></path><path d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z" fill="currentColor"></path></svg>
+            <span>Перетащите фото и видео</span>
+          </div>
+        </DialogContent>
+        <DialogActions>
+        <div>
+          <form method="post" enctype="multipart/form-data">
+            <label class="input-file">
+              <input type="file" name="file"/>		
+              <span className='text-white font-medium'>Выбрать на компьютере</span>
+            </label>
+          </form>
+        </div>  
+        </DialogActions>
+        </div>
+      </Dialog>
 
     </div>
     <div className='md:ml-[244px]'>
@@ -279,9 +333,9 @@ const Layout = () => {
         <div className='w-[48px] h-[48px] p-[12px]'>
             {
                 pathname === "/profile" ?
-                <img src={userimage} alt="" className='border-[2px] border-black w-[26px] h-[26px] rounded-[50%] fixed hover:w-[27px] hover:h-[27px]'/>
+                <img src={userimage} alt="" className='border-[2px] border-black w-[26px] h-[26px] rounded-[50%] max-w-max hover:w-[27px] hover:h-[27px]'/>
                 :
-                <img src={userimage} alt="" className='w-[26px] h-[26px] rounded-[50%] fixed hover:w-[27px] hover:h-[27px]'/>
+                <img src={userimage} alt="" className='w-[26px] h-[26px] rounded-[50%] hover:w-[27px] max-w-max hover:h-[27px]'/>
             }
         </div>
         </Link>
