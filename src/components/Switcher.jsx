@@ -13,14 +13,12 @@ export default function Switcher() {
 
     return(
         <>
-          <div className="m-16 flex flex-col items-center">
+          <div>
             <DarkModeSwitch
                 checked={darkSide}
                 onChange={toggleDarkMode}
-                size={56}
+                size={18}
             />
-            <h3 className='text-gray-800 dark:text-gray-300 pt-4'>{colorTheme === 'light' ? "Dark mode" : "Light mode"}</h3>
-
           </div>
         </>
     )
