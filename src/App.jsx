@@ -14,11 +14,16 @@ function App() {
   const isRouter = createBrowserRouter([
     {
       path: "/",
+      element: <Login />
+    },
+    {
+      path: "/home",
       element: <Layout />,
       children: [
         {
           index: true,
           element: <Home />,
+
         },
         {
           path: "searchprofile",
@@ -40,10 +45,8 @@ function App() {
           path: "profile",
           element: <Profile />,
         },
-        {
-          path: "login",
-          element: <Login />,
-        },
+        
+
       ],
     },
     {

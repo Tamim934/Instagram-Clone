@@ -8,6 +8,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom"
+import TemporaryDrawer from "../../components/Drawer"
 
 
 
@@ -212,9 +214,7 @@ const Messages = () => {
                 alt=""
               />
               <div className="hidden md:block">
-                <h1 className=" xl:text-[19px] font-nornal">
-                  muhammadsurur
-                </h1>
+                <h1 className=" xl:text-[19px] font-nornal">muhammadsurur</h1>
                 <p className="text-[#909090]">Вы: parto instagramta:18 ч.</p>
               </div>
             </div>
@@ -395,9 +395,10 @@ const Messages = () => {
               />
               <h1 className="lg:flex gap-[10px] hidden lg:block">
                 Mirzozoda <span className="hidden lg:block"> Mirzoali</span>
+                {/* <TemporaryDrawer/> */}
               </h1>
             </div>
-            <div className="flex items-center lg:gap-[20px]">
+            <div className="flex items-center gap-[5px] lg:gap-[20px]">
               <IconButton>
                 <svg
                   aria-label="Голосовой вызов"
@@ -447,50 +448,7 @@ const Messages = () => {
                   ></path>
                 </svg>
               </IconButton>
-              <IconButton>
-                <svg
-                  aria-label="Информация о переписке"
-                  class="x1lliihq x1n2onr6"
-                  color="rgb(0, 0, 0)"
-                  fill="rgb(0, 0, 0)"
-                  height="24"
-                  role="img"
-                  viewBox="0 0 24 24"
-                  width="24"
-                >
-                  <title>Информация о переписке</title>
-                  <circle
-                    cx="12.001"
-                    cy="12.005"
-                    fill="none"
-                    r="10.5"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                  ></circle>
-                  <circle cx="11.819" cy="7.709" r="1.25"></circle>
-                  <line
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    x1="10.569"
-                    x2="13.432"
-                    y1="16.777"
-                    y2="16.777"
-                  ></line>
-                  <polyline
-                    fill="none"
-                    points="10.569 11.05 12 11.05 12 16.777"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                  ></polyline>
-                </svg>
-              </IconButton>
+              <TemporaryDrawer />
             </div>
           </div>
           <div className=" h-[85vh]" style={{ overflow: "auto" }}>
@@ -507,30 +465,10 @@ const Messages = () => {
                   className="px-[30px] py-[5px] rounded-[8px] bg-[#dedede] my-[14px] font-medium hover:bg-[#c5c5c5]"
                   onClick={handleClickOpen}
                 >
-                  Смотруть профиль
+                  <Link to="/profile">Смотреть профиль</Link>
                 </button>
-                <Dialog
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogContent>
-                    <img
-                      className="m-auto rounded-[50%] py-[20px]"
-                      src="https://scontent.cdninstagram.com/v/t51.2885-19/387247467_1024024805300116_8441586804864033304_n.jpg?stp=dst-jpg_s100x100&_nc_cat=108&ccb=1-7&_nc_sid=c4dd86&_nc_ohc=kIQ1hws3QLQAX8DO6Mo&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.cdninstagram.com&oh=00_AfC1YHW82jycw3AOYCkj1698XL3EzLv07nkRgfKc6A7RVA&oe=6536223D"
-                      alt=""
-                    />
-                    <h1 className="text-[25px] text-center font-medium">
-                      Mirzozoda Mirzoali
-                    </h1>
-                    <p className="text-[#696969] text-center">
-                      mirzozoda_.i8 · Instagram
-                    </p>
-                  </DialogContent>
-                </Dialog>
               </div>
-              <div className="flex gap-[20px] items-center justify-between w-[95%] m-auto border-[2px] px-[25px] py-[10px] rounded-[20px]">
+              <div className="flex gap-[20px] items-center justify-between w-[95%] m-auto border-[2px] px-[25px] py-[10px] rounded-[20px] mt-[250px]">
                 <div className="flex items-center gap-[20px] w-[90%]">
                   <IconButton>
                     <svg
@@ -548,7 +486,7 @@ const Messages = () => {
                     </svg>
                   </IconButton>
                   <input
-                    className="text-[20px] outline-none w-[100%]"
+                    className="  text-[20px] outline-none w-[100%]"
                     type="text"
                     placeholder="Напишите сообщение....."
                   />

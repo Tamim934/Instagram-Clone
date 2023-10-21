@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Swiper from "../../components/SwiperSh";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -12,15 +12,36 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { axiosRequest, getToken, saveToken } from "../../utilities/axiosRequest";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const [password, setPassword] = useState("")
+  const [userName, setUserName] = useState("")
+  const navigate = useNavigate()
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const Login = async () => {
+    console.log(1)
+    const obj = {
+      userName: userName,
+      password: password
+    }
+    try {
+      const { data } = await axiosRequest.post("Account/login", obj)
+      saveToken(data.data)
+      navigate('home')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return (
     <div className="bg-[white] py-[30px] w-[100%]">
@@ -36,47 +57,53 @@ const Login = () => {
             <h1 className="text-[40px] text-center py-[20px] font-medium">
               𝓘𝓷𝓼𝓽𝓪𝓰𝓻𝓪𝓶
             </h1>
-            <TextField
-              sx={{ width: "100%" }}
-              id="filled-basic"
-              label="Телефон, имя пользователя или эл.адрес"
-              variant="filled"
-            />
-            <div className="">
-              <FormControl
-                sx={{ m: 1, width: "100%", color: "#0f0f0f" }}
-                variant="standard"
-              >
-                <InputLabel htmlFor="standard-adornment-password">
-                  Password
-                </InputLabel>
-                <Input
-                  id="standard-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </div>
-            <button className="bg-[#4CB5F9] text-[white] px-[30px] py-[8px] rounded-[12px] text-[20px] w-[100%] m-auto my-[20px]">
+            <form >
+
+              <TextField
+                onChange={(e) => setUserName(e.target.value)}
+                sx={{ width: "100%" }}
+                id="filled-basic"
+                label="Телефон, имя пользователя или эл.адрес"
+                variant="filled"
+              />
+              <div className="">
+                <FormControl
+                  sx={{ m: 1, width: "100%", color: "#0f0f0f" }}
+                  variant="standard"
+                >
+                  <InputLabel htmlFor="standard-adornment-password">
+                    Password
+                  </InputLabel>
+                  <Input
+                    onChange={(e) => setPassword(e.target.value)}
+                    id="standard-adornment-password"
+                    type={showPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </div>
+            </form>
+
+            <button onClick={() => Login()} className="bg-[#4CB5F9] text-[white] px-[30px] py-[8px] rounded-[12px] text-[20px] w-[100%] m-auto my-[20px]">
               Войти
             </button>
             <div className="flex gap-[14px] items-center text-[#b6b6b6] justify-center">
               <h1 className="font-medium hidden 2xl:block">
-                -----------------------
+                ----------------
               </h1>
               <h1 className="text-[20px] font-medium">ИЛИ</h1>
               <h1 className="font-medium hidden 2xl:block">
-                ------------------------
+                ----------------
               </h1>
             </div>
             <div className="flex items-center justify-center gap-[20px] py-[20px]">
