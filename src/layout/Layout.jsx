@@ -2,16 +2,13 @@ import React, { useState } from 'react'
 import '../App.css'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import Switcher from '../components/Switcher'
 import userimage from '../assets/userimage.jpg'
 import { FileToBase64 } from '..//../src/utils/FileToBase64';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { MicNone } from '@mui/icons-material'
 import { Box } from '@mui/material'
+import CustomizedMenus from '../components/More'
 
 const Layout = () => {
 
@@ -40,16 +37,6 @@ const Layout = () => {
   const handlePostImage = async (event) => {
     let file = await FileToBase64(event.target.files[0]);
     setPostImg(file);
-  };
-
-  const [open2, setOpen2] = React.useState(false);
-
-  const openDarkModeModal = () => {
-    setOpen2(true);
-  };
-
-  const closeDarkModeModal = () => {
-    setOpen2(false);
   };
 
   return (
@@ -314,19 +301,7 @@ const Layout = () => {
             </a>
 
             <div className='w-[220px] h-[56px] pt-[4px]'>
-                <div onClick={openDarkModeModal} className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer'>
-
-                <div className='flex items-center gap-[16px]'>
-                <div className='dark:hidden'>
-                <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
-                </div>
-                <div className='hidden dark:block'>
-                <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
-                </div>
-                <span className='text-black dark:text-white text-[16px]'>Ещё</span>
-                </div>
-                
-                </div>
+              <CustomizedMenus/>          
             </div>
 
         </div>
@@ -361,32 +336,12 @@ const Layout = () => {
         </Box>
       </Dialog>
 
-      <Dialog
-        open={open2}
-        onClose={closeDarkModeModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <div className='dark:bg-black'>
-        <DialogTitle id="alert-dialog-title" sx={{ textAlign: "center", fontSize: "16px", fontWeight: "700"}} className='dark:text-white'>
-          {"Переключить режим"}
-        </DialogTitle>
-        <hr />
-        <DialogContent>
-        <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px"}}>
-          <Switcher/>
-          <span className='text-black dark:text-white'>Ночной режим</span>
-        </Box>
-        </DialogContent>  
-        </div>
-      </Dialog>
-
     </div>
     <div className='md:ml-[244px] dark:bg-black'>
         <Outlet/>
     </div>
     <hr className='md:hidden'/>
-    <div className='flex justify-evenly items-center md:hidden'>
+    <div className='sticky bottom-0 flex justify-evenly items-center md:hidden bg-black dark:bg-white'>
         <Link to="/">
         <div className='w-[48px] h-[48px] p-[12px]'>
             {
@@ -417,7 +372,7 @@ const Layout = () => {
             }
         </div>
         </Link>
-        <div className='w-[48px] h-[48px] p-[12px]'>
+        <div onClick={openPostModal} className='w-[48px] h-[48px] p-[12px]'>
             <svg aria-label="Новая публикация" className='fixed hover:w-[25px] hover:h-[25px]' class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Новая публикация</title><path d="M2 12v3.45c0 2.849.698 4.005 1.606 4.944.94.909 2.098 1.608 4.946 1.608h6.896c2.848 0 4.006-.7 4.946-1.608C21.302 19.455 22 18.3 22 15.45V8.552c0-2.849-.698-4.006-1.606-4.945C19.454 2.7 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.547 2 5.703 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="6.545" x2="17.455" y1="12.001" y2="12.001"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line></svg>
         </div>
         <Link to="/messages">
