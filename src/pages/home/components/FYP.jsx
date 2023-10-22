@@ -3,7 +3,7 @@ import avatar from "../img/Avatar-No-Background.png";
 const FYP = () => {
   return (
     <div className="flex items-center gap-3 ">
-      <img className="bg-none w-[20%]" src={avatar} alt="" />
+      <img className="bg-none w-[15%] 2xl:w-[10%] " src={avatar} alt="" />
       <p>
         <p className="font-bold">muhammadsurur__</p>
         <p>amsurur</p>
