@@ -7,3 +7,8 @@
 #bottom{
     border-bottom: 10px solid rgb(220, 220, 220) ;
 }
+
+.hidden {
+    display: none;
+  }
+/* editprofilecss   */
