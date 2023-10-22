@@ -188,9 +188,8 @@ const [modal,setModal]=useState(false)
           <div className="flex ml-[50px] mt-[5px] max600:ml-[-65px]">
           <h1 className='w-[300px] text-[16px] max600:w-[300px]'>{userBio}</h1>  
 {/* //will sone changes tis to userbio */}
-          </div> <div className='mt-[50px] ml-[-200px] max5:ml-[-80px]'>
-            <div className='w-[80px] max5:w-[70px] max5:h-[70px] max rounded-full h-[80px] border-[2px] flex justify-center items-center '>
-              <button className='text-gray-400 '><img className='w-[30px] max5:w-[20px]' src="/src/assets/imagesuserprofile/add.png" alt="" /></button>
+          </div> 
+      
 
 
    
@@ -207,8 +206,9 @@ const [modal,setModal]=useState(false)
             <p className="ml-[25px] mt-[5px] text-[18px] ">new</p>
           </div>
         </div>
-      </div>
-
+      
+     
+</div>
       <div className="justify-center mt-[50px] hidden max600:flex">
         <button className="w-[100%] h-[2px] bg-[#e3e2e2]"></button>
       </div>
@@ -515,7 +515,7 @@ Editing your links is only available on mobile. Visit the Instagram<br></br> app
 }
     
     </div>
-    </div></div>
+  
   );
 };
 
