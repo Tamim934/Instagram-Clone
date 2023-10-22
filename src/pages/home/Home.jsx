@@ -20,6 +20,7 @@ import { axiosRequest, getToken } from "../../utilities/axiosRequest";
 const Home = () => {
   const PostImagesApi = "http://65.108.148.136:8085/images";
   const userIdApi = "http://65.108.148.136:8085/userId";
+
   const [post, setPost] = useState([]);
   const [userId, userUserId] = useState([]);
   const PostId = getToken()?.pid;
@@ -146,21 +147,26 @@ const Home = () => {
                 {userId.map((el) => {
                   if (el.id == e.userId) {
                     return (
-                      <Link key={el.id} to={"/profile"}>
+                      <Link key={el.id} className="w-[50%]" to={"/profile"}>
                         <div
                           className="flex items-center gap-2 "
                           onTouchMoveCapture={() => setProfileModal()}
                         >
-                          <img
+                          {/* <img
                             className="w-[10%]"
                             src="38f1a729-7d1b-407d-9368-7f39997c43b5.jpeg"
                             // src="https://static.vecteezy.com/system/resources/previews/019/896/008/original/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"
                             alt=""
+                          /> */}
+                          <img
+                            src={`${import.meta.env.VITE_APP_FILES_URL}${
+                              el.avatar
+                            }`}
+                            className="w-[10%] rounded-full"
+                            alt=""
                           />
                           <p>
-                            <Link to={"/profile"}>
-                              {`${e.userName} /${e}`}{" "}
-                            </Link>
+                            <Link to={"profile"}>{`${el.userName}`}</Link>
                             <span className="text-gray-400 ml-2">• 1 дн.</span>
                           </p>
                         </div>
@@ -304,14 +310,23 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="w-[98%] mx-auto">
-                    <p className="font-semibold">
-                      {e.postLikeCount} отметок "Нравится"
-                    </p>
-                    <p>
-                      <span className="font-semibold mr-2">premierzal.tj</span>
-                      Производство Турция🇹🇷 под заказ доставка 7-12 дней цена
-                      345с размер S M L XL XXL предоплата 50% #azizshopсвитер
-                    </p>
+                    {userId.map((el) => {
+                      if (el.id == e.userId) {
+                        return (
+                          <>
+                            <p className="font-semibold">
+                              {e.postLikeCount} отметок "Нравится"
+                            </p>
+                            <p>
+                              <span className="font-semibold mr-2">{`${el.userName}`}</span>
+                              Производство Турция🇹🇷 под заказ доставка 7-12 дней
+                              цена 345с размер S M L XL XXL предоплата 50%
+                              #azizshopсвитер
+                            </p>
+                          </>
+                        );
+                      }
+                    })}
                   </div>
                 </div>
               </div>
