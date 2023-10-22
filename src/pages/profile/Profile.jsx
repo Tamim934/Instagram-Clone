@@ -6,19 +6,60 @@ import { Dialog } from '@mui/material';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 const Profile = () => {
+
+
+  
+//username
+const [name, setName] = useState(localStorage.getItem('name') || 'Cristiano_Ronaldo');
+useEffect(() => {
+  localStorage.setItem('name', name);
+}, [name]);
+
+const handleChangeName = (event) => {
+  setName(event.target.value);
+};
+
+const handleSubmitName = () => {
+  setIsLoading(true);
+  axiosRequest.post('http://65.108.148.136:8085/User/get-users', { name:name })
+    .then(response => {
+      setName(response.data.name);
+      setIsLoading(false);
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+      setIsLoading(false);
+    });
+};
+
+//done
+
+
+
+
+
 // bio
-const [userBio, setUserBio] = useState('');
 
+const [userBio, setUserBio] = useState(localStorage.getItem('userBio') || 'footballer');
+const maxLength = 150;
 
-const [bio, setBio] = useState('');
-  const maxLength = 150;
+const handleChange = (event) => {
+  if (event.target.value.length <= maxLength) {
+    setUserBio(event.target.value);
+    localStorage.setItem('userBio', event.target.value);
+  }
+};
 
-  const handleChange = (event) => {
-    if (event.target.value.length <= maxLength) {
-      setBio(event.target.value);
-    }
-  };
- 
+const updateBio = () => {
+  axiosRequest.post('http://65.108.148.136:8085/User/update-bio', { bio: userBio })
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error('There was an error!', error);
+    });
+};
+
 //done
 
 
@@ -62,7 +103,7 @@ const handleChangeProfilePicture = async (event) => {
 
       // request to your server with the file data
       try {
-        // Replace 'SOftCLUB
+        // Replace at 'SOftCLUB
         const response = await axiosRequest.post('NOTDONEYET', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -110,7 +151,7 @@ const [modal,setModal]=useState(false)
     <div>
     <div className='flex max5:block items-center ml-[50px] max6:ml-[20px]'>
       <div className='flex max5:gap-[10px] items-center'>
-    <h1 className='text-[20px]'>Cristiano_Ronaldo</h1>
+      <h1 className='text-[20px]'>{name}</h1>
     <svg className='hidden max5:flex' xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 100 100" id="settings"><g><path d="M88.9 58.8c-2.4-2.3-3.7-5.5-3.7-8.8 0-3.3 1.3-6.4 3.7-8.8.4-.4.8-.7 1.3-1.1.7-.5.9-1.4.7-2.2-.8-2.9-2-5.7-3.4-8.3-.4-.7-1.2-1.1-2-1-.7.1-1.2.1-1.7.1-6.9 0-12.5-5.6-12.5-12.4 0-.5 0-1.1.1-1.7.1-.8-.3-1.6-1-2-2.6-1.4-5.4-2.6-8.3-3.4-.8-.2-1.7.1-2.2.7-.4.5-.8 1-1.1 1.3-2.4 2.3-5.5 3.6-8.8 3.6s-6.5-1.3-8.8-3.6c-.4-.4-.7-.8-1.1-1.3-.5-.7-1.4-.9-2.2-.7-2.9.9-5.7 2-8.3 3.4-.7.4-1.1 1.2-1 2 .1.7.1 1.2.1 1.7 0 6.9-5.6 12.4-12.5 12.4-.5 0-1.1 0-1.7-.1-.8-.1-1.6.3-2 1-1.4 2.6-2.6 5.4-3.4 8.3-.2.8 0 1.7.7 2.2.6.4 1 .8 1.3 1.1 4.9 4.8 4.9 12.7 0 17.6-.4.4-.8.7-1.3 1.1-.7.5-.9 1.4-.7 2.2.9 2.9 2 5.7 3.4 8.3.4.7 1.2 1.1 2 1 .7-.1 1.2-.1 1.7-.1 6.9 0 12.5 5.6 12.5 12.4 0 .5 0 1.1-.1 1.7-.1.8.3 1.6 1 2 2.6 1.4 5.4 2.6 8.3 3.4.8.2 1.7 0 2.2-.7.4-.5.8-1 1.1-1.3 2.4-2.3 5.5-3.6 8.8-3.6s6.5 1.3 8.8 3.6c.4.4.7.8 1.1 1.3.4.5 1 .8 1.6.8.2 0 .4 0 .6-.1 2.9-.9 5.7-2 8.3-3.4.7-.4 1.1-1.2 1-2-.1-.7-.1-1.2-.1-1.7 0-6.9 5.6-12.4 12.5-12.4.5 0 1.1 0 1.7.1.8.1 1.6-.3 2-1 1.4-2.6 2.6-5.4 3.4-8.3.2-.8 0-1.7-.7-2.2-.5-.4-1-.7-1.3-1.1zm-4.3 8.5h-.9c-9.1 0-16.5 7.4-16.5 16.4v.9c-1.6.8-3.3 1.5-5.1 2.1l-.6-.6c-3.1-3.1-7.2-4.8-11.6-4.8s-8.5 1.7-11.6 4.8l-.6.6c-1.7-.6-3.4-1.3-5.1-2.1v-.9c0-9.1-7.4-16.4-16.5-16.4h-.9c-.8-1.6-1.5-3.3-2.1-5.1l.6-.6c6.4-6.4 6.4-16.8 0-23.3l-.6-.6c.6-1.7 1.3-3.4 2.1-5.1h.9c9.1 0 16.5-7.4 16.5-16.4v-.9c1.6-.8 3.3-1.5 5.1-2.1l.6.6c3.1 3.1 7.2 4.8 11.6 4.8s8.5-1.7 11.6-4.8l.6-.6c1.7.6 3.4 1.3 5.1 2.1v.9c0 9.1 7.4 16.4 16.5 16.4h.9c.8 1.6 1.5 3.3 2.1 5.1l-.6.6c-3.1 3.1-4.8 7.2-4.8 11.6s1.7 8.5 4.8 11.6l.6.6c-.6 1.9-1.3 3.6-2.1 5.2zM50 26.2c-13.1 0-23.8 10.7-23.8 23.8S36.9 73.8 50 73.8 73.8 63.1 73.8 50 63.1 26.2 50 26.2zm0 43.6c-10.9 0-19.8-8.9-19.8-19.8S39.1 30.2 50 30.2 69.8 39.1 69.8 50 60.9 69.8 50 69.8z"></path></g><g><path fill="#00F" d="M1644-790V894H-140V-790h1784m8-8H-148V902h1800V-798z"></path></g></svg>
     </div><div className='flex gap-[20px] ml-[20px]  max5:ml-[0] max5:mt-[20px]'>
    
@@ -143,8 +184,8 @@ const [modal,setModal]=useState(false)
 
           </div>
           <div className="flex ml-[50px] mt-[5px] max600:ml-[-65px]">
-            <h1 className='w-[300px] text-[16px] max600:w-[300px]'>footballer for jueventus real madrid alnassr and manu </h1>
-
+          <h1 className='w-[300px] text-[16px] max600:w-[300px]'>{userBio}</h1>  
+{/* //will sone changes tis to userbio */}
           </div> <div className='mt-[50px] ml-[-200px] max5:ml-[-80px]'>
             <div className='w-[80px] max5:w-[70px] max5:h-[70px] max rounded-full h-[80px] border-[2px] flex justify-center items-center '>
               <button className='text-gray-400 '><img className='w-[30px] max5:w-[20px]' src="/src/assets/imagesuserprofile/add.png" alt="" /></button>
@@ -340,7 +381,7 @@ const [modal,setModal]=useState(false)
       </div>
    <div>
       <form className=''> 
-        <h1>Cristiano_Ronaldo</h1>
+      <h1>{name}</h1>
         <label htmlFor="profilePic" className='text-[14px] font-bold' style={{cursor: 'pointer', color: '#42bae6'}}>Change Profile Picture</label>
         <input type="file" id="profilePic" name="profilePic" style={{display: 'none'}} onChange={handleChangeProfilePicture} />
       </form>
@@ -350,8 +391,17 @@ const [modal,setModal]=useState(false)
  </div>
 
 <div className='ml-[80px] mt-[30px]'>
-  
-  <div className='flex gap-[40px]'>
+<div className='flex gap-[60px]'>
+ <h1 className='text-[16px] font-medium'>Name</h1> 
+ <input 
+        type="text" 
+        placeholder='Change Your Name' 
+        className='pl-[10px] rounded-sm border outline-none w-[350px] h-[30px]' 
+        value={name} 
+        onChange={handleChangeName} 
+      />
+  </div>
+  <div className='flex gap-[40px] mt-[20px]'>
  <h1 className='text-[16px] font-medium'>websites</h1> 
   <input type="text" placeholder='Website' className='pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] bg-[#e8e6e6]' />
   </div>
@@ -361,12 +411,13 @@ Editing your links is only available on mobile. Visit the Instagram<br></br> app
 <div className='flex gap-[50px] ml-[30px] mt-[20px]'>
  <h1 className='text-[16px] font-medium'>bio</h1> 
  <textarea 
-        placeholder='bio' 
-        className='pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px]' 
-        value={bio} 
-        onChange={handleChange}
-      />
-      <p className='text-[gray]'>{bio.length}/{maxLength}</p>
+      placeholder='bio' 
+      className='pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px]' 
+      value={userBio} 
+      onChange={handleChange}
+    />
+     <p className='text-[gray]'>{userBio.length}/{maxLength}</p>
+
 
   </div>
 
@@ -388,11 +439,12 @@ Editing your links is only available on mobile. Visit the Instagram<br></br> app
       variant="contained" 
       color="primary" 
       disabled={isLoading} 
-      onClick={handleSubmit}
+      onClick={()=>{handleSubmit()}}
       style={{width: '80px', height: '35px'}}
     >
       {isLoading ? <CircularProgress size={24} /> : 'Submit'}
     </Button>
+   
 </div>
 
 </div>
