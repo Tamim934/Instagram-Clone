@@ -12,8 +12,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { axiosRequest, saveToken } from "../../utilities/axiosRequest";
+import { axiosRequest, getToken, saveToken } from "../../utilities/axiosRequest";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -35,12 +36,12 @@ const Login = () => {
     try {
       const { data } = await axiosRequest.post("Account/login", obj)
       saveToken(data.data)
-      console.log(data)
       navigate('home')
     } catch (error) {
       console.log(error)
     }
   }
+
 
   return (
     <div className="bg-[white] py-[30px] w-[100%]">

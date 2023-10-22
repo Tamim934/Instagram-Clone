@@ -17,8 +17,8 @@ function App() {
       element: <Login />
     },
     {
+      path: "/home",
       element: <Layout />,
-      path: "",
       children: [
         {
           index: true,
@@ -45,6 +45,7 @@ function App() {
           path: "profile",
           element: <Profile />,
         },
+        
 
       ],
     },
