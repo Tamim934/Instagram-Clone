@@ -141,7 +141,7 @@ const Home = () => {
           return (
             <div
               key={e.userId}
-              className="w-[80%] sm:w-[75%] md:w-[70%]  2xl:w-[45%] mx-auto mb-20 mt-5"
+              className="w-[80%] sm:w-[75%] md:w-[70%]  2xl:w-[45%] mx-auto mb-10 mt-5"
             >
               <div className="flex items-center mb-2 justify-between">
                 {userId.map((el) => {
@@ -162,11 +162,14 @@ const Home = () => {
                             src={`${import.meta.env.VITE_APP_FILES_URL}${
                               el.avatar
                             }`}
-                            className="w-[10%] rounded-full"
+                            className="w-[20%] rounded-full"
                             alt=""
                           />
                           <p>
-                            <Link to={"profile"}>{`${el.userName}`}</Link>
+                            <Link
+                              className="font-semibold"
+                              to={"profile"}
+                            >{`${el.userName}`}</Link>
                             <span className="text-gray-400 ml-2">• 1 дн.</span>
                           </p>
                         </div>
@@ -319,9 +322,7 @@ const Home = () => {
                             </p>
                             <p>
                               <span className="font-semibold mr-2">{`${el.userName}`}</span>
-                              Производство Турция🇹🇷 под заказ доставка 7-12 дней
-                              цена 345с размер S M L XL XXL предоплата 50%
-                              #azizshopсвитер
+                              {e.title}
                             </p>
                           </>
                         );
