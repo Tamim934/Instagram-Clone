@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { axiosRequest, getToken } from '../utilities/axiosRequest';
 
 
 
-const Post = ({ username, image, caption, likes, comments }) => {
+const Post = ({ username, caption, likes, comments }) => {
+  const userId = getToken()?.sid;
+  const [newimage,setnewImage]=useState()
+  const getProfile=async()=>{
+    try {
+      const {data}= await axiosRequest.get(`Post/get-posts/${userId}`)
+console.log(data?.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+
+
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -12,13 +28,13 @@ const Post = ({ username, image, caption, likes, comments }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >                                          
-      <img  src={image} alt="Post" className=" w-96  h-96 max4:w-80 max4:h-80 max600:w-60 max600:h-60 max6:w-40 max6:h-40  object-cover" />
-      {isHovered && (
+      {/* <img  src={image} alt="Post" className=" w-96  h-96 max4:w-80 max4:h-80 max600:w-60 max600:h-60 max6:w-40 max6:h-40  object-cover" /> */}
+      {/* {isHovered && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center gap-[30px] justify-center p-4">
           <p className="text-white flex items-center gap-[5px]"> 🤍{likes}</p>
           <p className="text-white  flex items-center gap-[5px]">💬 {comments}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
