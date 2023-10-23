@@ -110,7 +110,6 @@ const Layout = () => {
             </div>
             </Link>
             
-            {/* <Link to="/searchprofile"> */}
             <div className='w-[48px] xl:w-[220px] h-[56px] pt-[4px]'>
                 <div onClick={() => setSearchModal(true)} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer'>
                 {
@@ -137,7 +136,6 @@ const Layout = () => {
                 }
                 </div>
             </div>
-            {/* </Link> */}
 
             <Link to="/home/explore">
             <div className='w-[48px] xl:w-[220px] h-[56px] pt-[4px]'>
@@ -311,13 +309,13 @@ const Layout = () => {
 
         </div>
 
-        {
+        {/* {
           searchModal ?
           <div className='w-[30%] h-[100vh] bg-amber-300'>
             <h1>QWERTY</h1>
           </div>
           : null
-        }
+        } */}
 
         <Dialog
         open={open}
