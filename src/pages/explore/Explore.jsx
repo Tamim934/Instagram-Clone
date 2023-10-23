@@ -1,107 +1,71 @@
 import React, { useState } from "react";
 import PreviewComponent from "../../components/Hover/Hover";
+import Modal from "../../components/Explorehandaler/Handler";
 const Explore = () => {
-  const [modal, setmodal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
-  const [selectedImage, setSelectedImage] = useState({ src: "", alt: "" });
+  const handleClick = (content) => {
+    setModalContent(content);
+    setShowModal(true);
+  };
 
-  const handleImageClick = (src, alt) => {
-    setSelectedImage({ src, alt });
-    setmodal(true);
+  const handleClose = () => {
+    setShowModal(false);
   };
 
 
   return (
-    <div>
-      <div className=" mt-[30px] xs:justify-center flex gap-[10px]  flex-wrap  sm:w-[70%] sm:ml-[20%]   sm:items-start">
-        <div className=" h-[30vh] xs:w-[40%] sm:w-[30%]" onClick={() => handleImageClick("https://th.bing.com/th/id/R.93d1528a95578fd09b9783d2fa744b36?rik=usFNunda%2f%2bdHIQ&pid=ImgRaw&r=0", "")}>
-          <PreviewComponent>
-            <img src="https://th.bing.com/th/id/R.93d1528a95578fd09b9783d2fa744b36?rik=usFNunda%2f%2bdHIQ&pid=ImgRaw&r=0" alt="" />
-          </PreviewComponent>
+    <div className=" w-[80%] ml-[10%]">
+         <div class="container">
+  <div class="area1" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/R.bdc53f193c4876a40019126cbe555bb9?rik=lgFR%2fnWZhwhchQ&pid=ImgRaw&r=0" alt="" />)}>
+    <img src="https://th.bing.com/th/id/R.bdc53f193c4876a40019126cbe555bb9?rik=lgFR%2fnWZhwhchQ&pid=ImgRaw&r=0" alt="" />
+  </div>
+  <div class="area2" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/OIP.anp0XQz24UeOEE5qf-5swQHaEo?pid=ImgDet&rs=1" alt="" />)}>
+    <img src="https://th.bing.com/th/id/OIP.anp0XQz24UeOEE5qf-5swQHaEo?pid=ImgDet&rs=1" alt="" />
+  </div>
+  <div class="area-4" onClick={() => handleClick( <video className=" h-[80vh]"  width="100%" height="100%" controls autoPlay muted loop preload="auto">
+  <source src="../src/assets/321011280_853427726405801_7678946478483476727_n.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video> )}>
+  <PreviewComponent>
 
-          <PreviewComponent>
-            <img className=" xs:h-[36vh] sm:h-[30vh] mt-[20px]" src="https://th.bing.com/th/id/R.dc88366f7814fbc48a4188f900327702?rik=PTVbnglqZOje9w&pid=ImgRaw&r=0" alt="" />
-          </PreviewComponent>
+<video className=" h-[80vh]"  width="100%" height="100%" controls autoPlay muted loop preload="auto">
+  <source src="../src/assets/321011280_853427726405801_7678946478483476727_n.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+</PreviewComponent>
 
-        </div>
-        <div className=" xs:w-[40%] sm:w-[30%] ] ">
-          <PreviewComponent>
-            <img className="" src="https://th.bing.com/th/id/OIP.Kkoynk29hxBvp4Df2BPifAHaE8?pid=ImgDet&rs=1" alt="" />
-          </PreviewComponent>
-          <PreviewComponent>
-            <img className="mt-[20px]" src="https://th.bing.com/th/id/OIP.Kkoynk29hxBvp4Df2BPifAHaE8?pid=ImgDet&rs=1" alt="" />
-          </PreviewComponent>
-        </div>
-        <div className=" xs:w-[80%]  sm:w-[35%]">
-          <PreviewComponent>
-
-            <video className=" sm:h-[64vh]" width="100%" height="100%" controls autoPlay muted loop preload="auto">
-              <source src="src/assets/321011280_853427726405801_7678946478483476727_n.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </PreviewComponent>
-
-        </div>
-
-
-
-      </div>
-      {modal ? (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[white] w-[60%]">
-          <div className="w-1/2 float-left">
-            <img src={selectedImage.src} alt={selectedImage.alt} />
-          </div>
-          <div className=" w-1/2 float-right">
-
-          </div>
-        </div>
-      ) : null}
-
-
-      <div className=" mt-[30px] xs:justify-center flex gap-[10px]  flex-wrap  sm:w-[70%] sm:ml-[20%]   sm:items-start">
-        <div className=" xs:w-[80%]  sm:w-[35%]">
-          <PreviewComponent>
-
-            <video className=" sm:h-[64vh]" width="100%" height="100%" controls autoPlay muted loop preload="auto">
-              <source src="src/assets/321011280_853427726405801_7678946478483476727_n.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </PreviewComponent>
-
-        </div>
-
-        <div className=" h-[30vh] xs:w-[40%] sm:w-[30%]" onClick={() => handleImageClick("https://th.bing.com/th/id/R.93d1528a95578fd09b9783d2fa744b36?rik=usFNunda%2f%2bdHIQ&pid=ImgRaw&r=0", "")}>
-          <PreviewComponent>
-            <img src="https://th.bing.com/th/id/R.93d1528a95578fd09b9783d2fa744b36?rik=usFNunda%2f%2bdHIQ&pid=ImgRaw&r=0" alt="" />
-          </PreviewComponent>
-          <PreviewComponent>
-            <img className="xs:h-[36vh] sm:h-[30vh] mt-[20px]" src="https://th.bing.com/th/id/R.dc88366f7814fbc48a4188f900327702?rik=PTVbnglqZOje9w&pid=ImgRaw&r=0" alt="" />
-          </PreviewComponent>
-        </div>
-        <div className=" xs:w-[40%] sm:w-[30%] ] ">
-          <PreviewComponent>
-            <img className="" src="https://th.bing.com/th/id/OIP.Kkoynk29hxBvp4Df2BPifAHaE8?pid=ImgDet&rs=1" alt="" />
-          </PreviewComponent>
-          <PreviewComponent>
-            <img className="mt-[20px]" src="https://th.bing.com/th/id/OIP.Kkoynk29hxBvp4Df2BPifAHaE8?pid=ImgDet&rs=1" alt="" />
-          </PreviewComponent>
-        </div>
-
-
-
-
-      </div>
-      {modal ? (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[white] w-[60%]">
-          <div className="w-1/2 float-left">
-            <img src={selectedImage.src} alt={selectedImage.alt} />
-          </div>
-          <div className=" w-1/2 float-right">
-
-          </div>
-        </div>
-      ) : null}
-
+  </div>
+  <div class="area5" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/OIP.OB8fZBMtLZD6VMfENy0PJAHaE8?pid=ImgDet&rs=1" alt="" />)}>
+    <img src="https://th.bing.com/th/id/OIP.OB8fZBMtLZD6VMfENy0PJAHaE8?pid=ImgDet&rs=1" alt="" />
+  </div>
+  <div class="area-6" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/R.5e077170933c851bc18b701826af53bc?rik=bQYR%2bCGHrFxigQ&riu=http%3a%2f%2fi.mdel.net%2fnewfaces%2fi%2f2016%2f02%2fmotw_02181610-600x600.jpg&ehk=9v2k6QCuE%2fKxCubxzji5Y%2fz06g0dt57%2bvMuqyy6aJgE%3d&risl=&pid=ImgRaw&r=0" alt="" />)}>
+    <img src="https://th.bing.com/th/id/R.5e077170933c851bc18b701826af53bc?rik=bQYR%2bCGHrFxigQ&riu=http%3a%2f%2fi.mdel.net%2fnewfaces%2fi%2f2016%2f02%2fmotw_02181610-600x600.jpg&ehk=9v2k6QCuE%2fKxCubxzji5Y%2fz06g0dt57%2bvMuqyy6aJgE%3d&risl=&pid=ImgRaw&r=0" alt="" />
+  </div>
+  <div class="area-8" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/OIP._yC174sEBWELImhmt0sS8gHaE2?pid=ImgDet&rs=1" alt="" />)}>
+    <img src="https://th.bing.com/th/id/OIP._yC174sEBWELImhmt0sS8gHaE2?pid=ImgDet&rs=1" alt="" />
+  </div>
+  <div class="area-11" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/OIP.IwPTUINIel4wPAwQM8devgHaE7?pid=ImgDet&rs=1" alt="" />)}>
+    <img src="https://th.bing.com/th/id/OIP.IwPTUINIel4wPAwQM8devgHaE7?pid=ImgDet&rs=1" alt="" />
+  </div>
+  <div class="area-7" onClick={() => handleClick(  <video className=" h-[80vh]  "  width="100%" height="100%" controls autoPlay muted loop preload="auto">
+  <source src="../src/assets/319618509_1006980723918556_4270605473213176322_n.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>)}>
+  <video className=" h-[80vh]  "  width="100%" height="100%" controls autoPlay muted loop preload="auto">
+  <source src="../src/assets/319618509_1006980723918556_4270605473213176322_n.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+  </div>
+  <div class="area-9"  onClick={() => handleClick(<img className=" h-[100%]" src="https://thumbs.dreamstime.com/z/smiling-friends-making-selfie-outdoors-friendship-leisure-summer-technology-people-concept-71564548.jpg" alt="" />)}>
+    <img src="https://thumbs.dreamstime.com/z/smiling-friends-making-selfie-outdoors-friendship-leisure-summer-technology-people-concept-71564548.jpg" alt="" />
+  </div>
+  <div class="area-10"  onClick={() => handleClick(<img className=" h-[100%]" src="https://images4.alphacoders.com/595/thumb-1920-595482.jpg" alt="" />)}>
+    <img src="https://images4.alphacoders.com/595/thumb-1920-595482.jpg" alt="" />
+  </div>
+</div>
+{showModal &&   <Modal  content={modalContent} onClose={handleClose} />}
 
     </div>
   )
