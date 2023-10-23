@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, IconButton, Modal } from '@mui/material';
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -10,6 +10,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom"
 import TemporaryDrawer from "../../components/Drawer"
+import axios from 'axios';
+import { axiosRequest } from '../../utilities/axiosRequest';
 
 
 
@@ -34,7 +36,25 @@ const style = {
 
 const Messages = () => {
 
+  const Api = "Chat/get-chats";
+const [chat, setchat] = useState([]);
 
+// const InstagramTabs = () => {
+//   const [activeTab, setActiveTab] = useState("posts");
+// };
+// const userId = getToken()?.sid;
+const getchatt = async () => {
+  try {
+    const { data } = await axiosRequest.get(Api);
+    console.log(data.data);
+    setchat(data)
+  } catch (error) {
+    console.log(error);
+  }
+};
+useEffect(() => {
+  getchatt();
+}, []);
    const [open, setOpen] = React.useState(false);
 
    const handleClickOpen = () => {
@@ -62,6 +82,14 @@ const Messages = () => {
 
   return (
     <div className="flex justify-end">
+      {
+        chat.map((e) => {
+          console.log(e);
+          return <div className="" key={e.chatId}>
+            <h1>{e.chatId}</h1>
+          </div>;
+        })
+      }
       <div className="w-[100%] flex justify-center">
         <div className="lg:w-[36%] border-[1px]">
           <div className="sticky z-[1] ">
