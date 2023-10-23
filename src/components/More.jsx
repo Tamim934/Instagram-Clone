@@ -71,7 +71,7 @@ export default function CustomizedMenus() {
         sx={{padding: 0, borderRadius: "8px"}}
         onClick={handleClick}
       >
-<div className='p-[12px] w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
+<div className='p-[12px] w-[48px] xl:w-[220px] h-[48px] mr-[12px] xl:mr-0 transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
 <div className='flex items-center gap-[16px]'>
 <div className='dark:hidden'>
 <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
