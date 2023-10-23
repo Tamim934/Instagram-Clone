@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { axiosRequest, getToken } from '../utilities/axiosRequest';
+
+
 
 const Post = ({ username, image, caption, likes, comments }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -23,6 +26,9 @@ const Post = ({ username, image, caption, likes, comments }) => {
 
 
 const Posts = () => {
+ 
+
+
   const posts = [
     { username: 'user1', image: '/src/assets/imagesuserprofile/OIP (1).jpeg', caption: 'Caption 1', likes: 100, comments: 20 },
     { username: 'user2', image: '/src/assets/imagesuserprofile/uwp3981822 (1).jpeg', caption: 'Caption 2', likes: 200, comments: 40 },

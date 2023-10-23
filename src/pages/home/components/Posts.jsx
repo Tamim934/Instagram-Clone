@@ -28,16 +28,17 @@ const Posts = () => {
           <MoreHorizIcon />
         </div>
         <div>
-          <div className="h-[400px] sm:h-[500px] md:h-[650px] 2xl:h-[700px]">
+          <div className="h-[400px] sm:h-[500px] md:h-[650px] text-white 2xl:h-[700px]">
             <Swiper
               pagination={{
                 type: "fraction",
+                color: "white",
               }}
               navigation={true}
               modules={[Pagination, Navigation]}
               className="mySwiper"
             >
-              <SwiperSlide>
+              <SwiperSlide className="text-white">
                 <img
                   className="rounded-xl mt-3"
                   src="https://i.pinimg.com/564x/2a/83/69/2a8369e773ca23497e5b3055882f684f.jpg"
