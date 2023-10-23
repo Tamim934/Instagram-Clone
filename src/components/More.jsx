@@ -94,7 +94,7 @@ export default function CustomizedMenus() {
         onClose={handleClose}
       >
         <div className='dark:bg-black dark:rounded-[2px]'>
-          <span className='text-black dark:text-white text-[16px] text-center font-medium'>Переключить режим</span>
+          <span className='text-black dark:text-white text-[16px] flex justify-center font-medium'>Переключить режим</span>
           <Divider sx={{ my: 0.5 }} />
           <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px"}}>
             <Switcher/>
