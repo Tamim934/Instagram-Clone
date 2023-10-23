@@ -41,8 +41,6 @@
     display: none;
   }
 /* editprofilecss   */
-
-
 .container { 
    display: grid;
     grid-template-columns: 31% 31% 38%;
