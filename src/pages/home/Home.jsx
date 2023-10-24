@@ -162,11 +162,11 @@ const Home = () => {
                             src={`${import.meta.env.VITE_APP_FILES_URL}${
                               el.avatar
                             }`}
-                            className="w-[10%] rounded-full"
+                            className="w-[15%] rounded-full"
                             alt=""
                           />
                           <p>
-                            <Link to={"profile"}>{`${el.userName}`}</Link>
+                            <Link to={"/profile"}>{`${el.userName}`}</Link>
                             <span className="text-gray-400 ml-2">• 1 дн.</span>
                           </p>
                         </div>
@@ -322,6 +322,7 @@ const Home = () => {
                               Производство Турция🇹🇷 под заказ доставка 7-12 дней
                               цена 345с размер S M L XL XXL предоплата 50%
                               #azizshopсвитер
+                              {e.title}
                             </p>
                           </>
                         );

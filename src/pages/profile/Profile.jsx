@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 import { Dialog } from "@mui/material";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+
+
+
+
+
+
+
 // import React, { useEffect, useState } from "react";
 
 const Profile = () => {
@@ -15,10 +22,16 @@ const Profile = () => {
   useEffect(() => {
     localStorage.setItem("name", name);
   }, [name]);
+  //username
+ 
+  useEffect(() => {
+    localStorage.setItem("name", name);
+  }, [name]);
 
   const handleChangeName = (event) => {
     setName(event.target.value);
   };
+
 
   const handleSubmitName = () => {
     setIsLoading(true);
@@ -34,14 +47,19 @@ const Profile = () => {
       });
   };
 
+
+  //done
   //done
 
   // bio
+  // bio
 
+
+  const maxLength = 150;
   const [userBio, setUserBio] = useState(
     localStorage.getItem("userBio") || "footballer"
   );
-  const maxLength = 150;
+
 
   const handleChange = (event) => {
     if (event.target.value.length <= maxLength) {
@@ -49,6 +67,7 @@ const Profile = () => {
       localStorage.setItem("userBio", event.target.value);
     }
   };
+
 
   const updateBio = () => {
     axiosRequest
@@ -61,10 +80,13 @@ const Profile = () => {
       });
   };
 
+
+  //done
   //done
 
   //sumbit loading
   const [isLoading, setIsLoading] = useState(false);
+
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -75,6 +97,7 @@ const Profile = () => {
       setIsLoading(false);
       setModal(false);
     }, 3000);
+    }
   };
 
   // changing profile for now
@@ -83,6 +106,9 @@ const Profile = () => {
   const [profilePic, setProfilePic] = useState(
     localStorage.getItem("profilePic") || defaultPic
   );
+  // changing profile for now
+
+
 
   const handleChangeProfilePicture = async (event) => {
     const file = event.target.files[0];
@@ -116,6 +142,7 @@ const Profile = () => {
 
   //done
   const [modal, setModal] = useState(false);
+ 
   const [activeTab, setActiveTab] = useState("posts");
   const [user, setUser] = useState("");
   const InstagramTabs = () => {
@@ -130,7 +157,7 @@ const Profile = () => {
         `UserProfile/get-UserProfile-by-id?id=${userId}`
       );
       setUser(data?.data);
-    
+    console.log(data)
       console.log(user)
       console.log(data.data.firstName)
       console.log(data.data.about);
@@ -156,7 +183,9 @@ try {
     getProfile();
     getFollowers()
   }, []);
-  return (
+
+  
+  (
     <div className=" dark:bg-black dark:text-white">
       <div className="flex justify-center max5:justify-start pt-[50px]">
         <div className="w-40 h-40 max5:w-20 max5:h-20 relative flex justify-center items-center rounded-full overflow-hidden">
@@ -260,6 +289,7 @@ try {
           </div>
         </div>
       </div>
+      
       <div className="justify-center mt-[50px] hidden max600:flex">
         <button className="w-[100%] h-[2px] bg-[#e3e2e2]"></button>
       </div>
@@ -535,42 +565,36 @@ try {
                 </div>
               </div>
 
-              <div className="ml-[80px] mt-[30px]">
-                <div className="flex gap-[60px]">
-                  <h1 className="text-[16px] font-medium">Name</h1>
-                  <input
-                    type="text"
-                    placeholder="Change Your Name"
-                    className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] text-black"
-                    value={name}
-                    onChange={handleChangeName}
-                  />
-                </div>
-                <div className="flex gap-[40px] mt-[20px]">
-                  <h1 className="text-[16px] font-medium">websites</h1>
-                  <input
-                    type="text"
-                    placeholder="Website"
-                    className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] bg-[#e8e6e6] text-black"
-                  />
-                </div>
-                <h1 className="text-[12px] ml-[100px] text-gray-600 dark:text-white">
-                  Editing your links is only available on mobile. Visit the
-                  Instagram<br></br> app and edit your profile to change the
-                  websites in your bio.
-                </h1>
-                <div className="flex gap-[50px] ml-[30px] mt-[20px]">
-                  <h1 className="text-[16px] font-medium">bio</h1>
-                  <textarea
-                    placeholder="bio"
-                    className="pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px] text-black"
-                    value={userBio}
-                    onChange={handleChange}
-                  />
-                  <p className="text-[gray]">
-                    {userBio.length}/{maxLength}
-                  </p>
-                </div>
+<div className='ml-[80px] mt-[30px]'>
+<div className='flex gap-[60px]'>
+ <h1 className='text-[16px] font-medium'>Name</h1> 
+ <input 
+        type="text" 
+        placeholder='Change Your Name' 
+        className='pl-[10px] rounded-sm border outline-none w-[350px] h-[30px]' 
+        value={name} 
+        onChange={handleChangeName} 
+      />
+  </div>
+  <div className='flex gap-[40px] mt-[20px]'>
+ <h1 className='text-[16px] font-medium'>websites</h1> 
+  <input type="text" placeholder='Website' className='pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] bg-[#e8e6e6]' />
+  </div>
+  <h1 className='text-[12px] ml-[100px] text-gray-600 dark:text-white'>
+
+Editing your links is only available on mobile. Visit the Instagram<br></br> app and edit your profile to change the websites in your bio.</h1>
+<div className='flex gap-[50px] ml-[30px] mt-[20px]'>
+ <h1 className='text-[16px] font-medium'>bio</h1> 
+ <textarea 
+      placeholder='bio' 
+      className='pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px]' 
+      value={userBio} 
+      onChange={handleChange}
+    />
+     <p className='text-[gray]'>{userBio.length}/{maxLength}</p>
+
+
+  </div>
 
                 <div className="flex gap-[50px] mt-[20px] ">
                   <h1 className="text-[16px] font-medium">Gender</h1>
@@ -613,6 +637,6 @@ try {
       ) : null}
     </div></div>
   );
-};
 
-export default Profile;
+
+export default Profile
