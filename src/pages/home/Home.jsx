@@ -162,7 +162,7 @@ const Home = () => {
                             src={`${import.meta.env.VITE_APP_FILES_URL}${
                               el.avatar
                             }`}
-                            className="w-[20%] rounded-full"
+                            className="w-[25%] rounded-full"
                             alt=""
                           />
                           <p>
