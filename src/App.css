@@ -41,7 +41,7 @@
     display: none;
   }
 /* editprofilecss   */
-.container { 
+/* .container { 
    display: grid;
     grid-template-columns: 31% 31% 38%;
     grid-template-rows: 0.8fr 0.8fr 0.8fr 0.8fr;
@@ -78,5 +78,12 @@
   }
    .container video{
   object-fit: cover;
-  } 
-/* //above code is for Explore page */
+  }   */
+/* //above code is for Explore page
+
+
+/* .imggg img{
+} */
+.imggg img{
+ height: 300px;
+}
