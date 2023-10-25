@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PreviewComponent from "../../components/Hover/Hover";
 import Modal from "../../components/Explorehandaler/Handler";
 import { axiosRequest, getToken } from "../../utilities/axiosRequest";
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 const Explore = () => {
   const [showModal, setShowModal] = useState(false);
@@ -9,50 +9,83 @@ const Explore = () => {
   const PostImagesExApi = "http://65.108.148.136:8085/images";
   const [postEx, setPostEx] = useState([]);
   const PostId = getToken()?.pid;
+const [users,setUsers]= useState([])
+const [modalObj,setModalObj] = useState()
+
+console.log(PostId)
   const getPostEx = async () => {
     try {
-      const { data } = await axiosRequest.get(`Post/get-posts?id=${PostId}`);
+      const { data } = await axiosRequest.get(`Post/get-posts`);
       console.log(data.data);
       setPostEx(data.data);
     } catch (error) {
       console.log(error);
     }
   };
+  const getUsers = async () => {
+    try {
+      const { data } = await axiosRequest.get(`User/get-users`);
+      console.log(data.data);
+      setUsers(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getPostEx();
+  getUsers()
   }, []);
-
-  const handleClick = (content) => {
-    setModalContent(content);
+  
+  const handleClick = (element) => {
     setShowModal(true);
+    const user = users.find(user => user.id === element.userId);
+    setModalObj({ ...element, user });
   };
-
+  
+  
+console.log(modalObj)
   const handleClose = () => {
     setShowModal(false);
   };
 
-  // Define your grid areas here
-  const gridAreas = ['area1', 'area2', 'area-3', 'area-4', 'area5', 'area-6', 'area-7', 'area-8', 'area-9', 'area-10', 'area-11'];
+  const fallbackImageURL = "../src/assets/imagesuserprofile/uwp3981822 (1).jpeg";
 
   return (
-    <div className="container w-[80%] ml-[10%]">
-      {postEx.map((post, index) => (
-        <div key={post.postId}>
-          {post.images.map((image, i) => (
-            <img
-              className={`rounded ${gridAreas[i % gridAreas.length]}`} // Assign grid area classes dynamically
-              src={`${PostImagesExApi}/${image}`}
-              alt="img"
-            />
-          ))}
-        </div>
-      ))}
-      {showModal && <Modal content={modalContent} onClose={handleClose} />}
+    <div className="gap-[20px] pt-[20px] w-[80%] grid grid-cols-3 ml-[10%]">
+      {postEx.map((e) => {
+        return (
+          <div className="flex imggg relative" key={e.postId}>
+  <img
+  onClick={() => {
+    handleClick(e)
+   
+  }}
+  className="w-[400px]"
+  src={`${PostImagesExApi}/${e.images[0]}`}
+  alt="img"
+  onError={(event) => {
+    event.target.src = fallbackImageURL;
+  }}
+/>
+
+
+            {e.images.length > 1 && (
+              <div className="absolute top-0 right-0">
+                <PhotoLibraryIcon/> 
+              </div>
+            )}
+          </div>
+        );
+      })}
+      {showModal && <Modal postObj={modalObj} content={modalContent} onClose={handleClose} users={users} />}
     </div>
   );
 };
 
 export default Explore;
+
+
+
 
 {/* <div class="container">
 <div class="area1" onClick={() => handleClick(<img className=" h-[100%]" src="https://th.bing.com/th/id/R.bdc53f193c4876a40019126cbe555bb9?rik=lgFR%2fnWZhwhchQ&pid=ImgRaw&r=0" alt="" />)}>
