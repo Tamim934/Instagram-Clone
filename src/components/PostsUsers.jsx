@@ -160,7 +160,7 @@ const Post = ({ post }) => {
                       </IconButton>
                     </div></div>
               <p className='pl-[10px]'> {post.postLikeCount} likes</p>
-              <p className='pl-[10px]'> {post.datePublished} </p>
+              <p className='pl-[10px] text-[gray] text-[12px]'> {post.datePublished.slice(0,10)} </p>
                <div>
               <CommentInput/>
                </div>
