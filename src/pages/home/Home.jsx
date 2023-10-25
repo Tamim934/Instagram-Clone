@@ -33,7 +33,7 @@ const Home = () => {
     try {
       const { data } = await axiosRequest.get(`Post/get-posts`);
       console.log(data.data);
-      setPost(data.data);
+      setPost(data.data.reverse());
     } catch (error) {
       console.log(error);
     }
