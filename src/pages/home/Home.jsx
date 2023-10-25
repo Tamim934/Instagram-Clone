@@ -20,26 +20,59 @@ import { axiosRequest, getToken } from "../../utilities/axiosRequest";
 const Home = () => {
   const PostImagesApi = "http://65.108.148.136:8085/images";
   const userIdApi = "http://65.108.148.136:8085/userId";
+  // const LikePostApi = "http://65.108.148.136:8085/Post/like-Post?id";
 
   const [post, setPost] = useState([]);
+  const [postById, setPostById] = useState([]);
+
   const [userId, userUserId] = useState([]);
+  const [commentModal, setCommentModal] = useState(false);
   const PostId = getToken()?.pid;
   const Userid = getToken()?.uid;
   const getPost = async () => {
     try {
-      const { data } = await axiosRequest.get(`Post/get-posts?id=${PostId}`);
+      const { data } = await axiosRequest.get(`Post/get-posts`);
       console.log(data.data);
       setPost(data.data);
     } catch (error) {
       console.log(error);
     }
   };
+  const getPostById = async (id) => {
+    console.log(1);
+    console.log();
+    try {
+      const { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
+      console.log(data.data);
+      setPostById(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getPost();
+    // getPostById();
   }, []);
+  const PostLike = async (id) => {
+    try {
+      const { data } = await axiosRequest.post(`Post/like-Post?postId=${id}`);
+      getPost(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const PostFavorites = async (id) => {
+    try {
+      const { data } = await axiosRequest.post(`Post/add-PostFavorite=${id}`);
+      getPost(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const getUserId = async () => {
     try {
-      const { data } = await axiosRequest.get(`User/get-users?id=${Userid}`);
+      const { data } = await axiosRequest.get(`User/get-users?id`);
       console.log(data.data);
       userUserId(data.data);
     } catch (error) {
@@ -51,9 +84,8 @@ const Home = () => {
   }, []);
 
   const [more, setMore] = useState(false);
-  useCallback;
   return (
-    <div className="flex   w-[100%]  justify-center lg:justify-between">
+    <div className="flex  dark:text-white  w-[100%]  justify-center lg:justify-between">
       <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[90%] ">
         <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10 ">
           <Swiper
@@ -141,7 +173,7 @@ const Home = () => {
           return (
             <div
               key={e.userId}
-              className="w-[80%] sm:w-[75%] md:w-[70%]  2xl:w-[45%] mx-auto mb-10 mt-5"
+              className="w-[80%] border-b pb-5 mb-5 dark:bg-black sm:w-[75%] md:w-[70%]  2xl:w-[60%] mx-auto mt-5"
             >
               <div className="flex items-center mb-2 justify-between">
                 {userId.map((el) => {
@@ -200,12 +232,15 @@ const Home = () => {
                       modules={[Pagination, Navigation]}
                       className="mySwiper"
                     >
-                      {e.images.map((e) => {
+                      {e.images.map((ell) => {
                         return (
-                          <SwiperSlide>
+                          <SwiperSlide className="dark:bg-black">
                             <img
-                              className="rounded"
-                              src={`${PostImagesApi}/${e}`}
+                              onDoubleClick={() => {
+                                PostLike(e.postId);
+                              }}
+                              className="rounded dark:bg-black"
+                              src={`${PostImagesApi}/${ell}`}
                               alt="img"
                             />
                           </SwiperSlide>
@@ -219,27 +254,55 @@ const Home = () => {
                 <div className="mt-2">
                   <div className="flex justify-between items-center">
                     <div>
-                      <IconButton className="">
-                        <svg
-                          aria-label="Нравится"
-                          class="x1lliihq x1n2onr6"
-                          color="rgb(38, 38, 38)"
-                          fill="rgb(38, 38, 38)"
-                          height="24"
-                          role="img"
-                          viewBox="0 0 24 24"
-                          width="24"
-                        >
-                          <title>Нравится</title>
-                          <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
-                        </svg>
+                      <IconButton
+                        className=""
+                        onClick={() => {
+                          PostLike(e.postId); // Toggle the value
+                        }}
+                      >
+                        {console.log(e.postFavorite)}
+                        {e.postLike ? (
+                          <span className="x1ykxiw6 x1ahuga x4hg4is x3oybdh">
+                            <svg
+                              aria-label="Не нравится"
+                              className="x1lliihq x1n2onr6 xxk16z8 "
+                              fill="red"
+                              height="24"
+                              role="img"
+                              viewBox="0 0 48 48"
+                              width="24"
+                            >
+                              <title>Не нравится</title>
+                              <path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path>
+                            </svg>
+                          </span>
+                        ) : (
+                          <svg
+                            aria-label="Нравится"
+                            className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
+                            color="rgb(38, 38, 38)"
+                            fill="rgb(38, 38, 38)"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Нравится</title>
+                            <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
+                          </svg>
+                        )}
                       </IconButton>
-                      <IconButton>
+                      <IconButton
+                        onClick={() => {
+                          getPostById(e.postId);
+                          setCommentModal(true);
+                        }}
+                      >
                         <svg
                           aria-label="Комментировать"
-                          class="x1lliihq x1n2onr6"
-                          color="rgb(0, 0, 0)"
-                          fill="rgb(0, 0, 0)"
+                          className="x1lliihq x1n2onr6 dark:text-white"
+                          color="rgb(38, 38, 38)"
+                          fill="rgb(38, 38, 38)"
                           height="24"
                           role="img"
                           viewBox="0 0 24 24"
@@ -257,10 +320,10 @@ const Home = () => {
                       </IconButton>
                       <IconButton>
                         <svg
-                          aria-label="Поделиться публикацией"
-                          class="x1lliihq x1n2onr6"
-                          color="rgb(0, 0, 0)"
-                          fill="rgb(0, 0,0)"
+                          ariaLabel="Поделиться публикацией"
+                          className="x1lliihq x1n2onr6 dark:text-white"
+                          color="rgb(38, 38, 38)"
+                          fill="rgb(38, 38, 38)"
                           height="24"
                           role="img"
                           viewBox="0 0 24 24"
@@ -270,8 +333,8 @@ const Home = () => {
                           <line
                             fill="none"
                             stroke="currentColor"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             x1="22"
                             x2="9.218"
                             y1="3"
@@ -288,27 +351,46 @@ const Home = () => {
                       </IconButton>
                     </div>
                     <div>
-                      <IconButton>
-                        <svg
-                          aria-label="Сохранить"
-                          class="x1lliihq x1n2onr6"
-                          color="rgb(0, 0, 0)"
-                          fill="rgb(0, 0, 0)"
-                          height="24"
-                          role="img"
-                          viewBox="0 0 24 24"
-                          width="24"
-                        >
-                          <title>Сохранить</title>
-                          <polygon
-                            fill="none"
-                            points="20 21 12 13.44 4 21 4 3 20 3 20 21"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          ></polygon>
-                        </svg>
+                      <IconButton
+                        onClick={() => {
+                          PostFavorites(e.postId);
+                        }}
+                      >
+                        {e?.postFavorite ? (
+                          <svg
+                            aria-label="Сохранить"
+                            class="x1lliihq x1n2onr6"
+                            color="rgb(0, 0, 0)"
+                            fill="rgb(0, 0, 0)"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Сохранить</title>
+                            <polygon
+                              fill="none"
+                              points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            ></polygon>
+                          </svg>
+                        ) : (
+                          <svg
+                            aria-label="Удалить"
+                            class="x1lliihq x1n2onr6 x5n08af"
+                            fill="currentColor"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Удалить</title>
+                            <path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path>
+                          </svg>
+                        )}
                       </IconButton>
                     </div>
                   </div>
@@ -317,12 +399,18 @@ const Home = () => {
                       if (el.id == e.userId) {
                         return (
                           <>
-                            <p className="font-semibold">
-                              {e.postLikeCount} отметок "Нравится"
+                            <p className="font-semibold ">
+                              {e.postLikeCount < 0
+                                ? e.postLikeCount * -1
+                                : e.postLikeCount}
+                              <span className="mx-[3px]"></span>
+                              отметок "Нравится"
                             </p>
                             <p>
-                              <span className="font-semibold mr-2">{`${el.userName}`}</span>
+                              <span className="font-semibold  mr-2">{`${el.userName}`}</span>
                               {e.title}
+                              <br />
+                              {e.content}
                             </p>
                           </>
                         );
@@ -356,7 +444,7 @@ const Home = () => {
       {more ? (
         <div
           style={{ background: "rgba(0, 0, 0, 0.5)" }}
-          className="fixed  top-0 left-0 w-[100%] z-10 h-[100vh] grid"
+          className="fixed  top-0 left-0 w-[100%] z-50 pt-10 h-[100vh] grid"
         >
           <div className="grid  modal-content rounded-2xl">
             <button className="hover:bg-gray-300 text-red-600 font-bold rounded-2xl p-5">
@@ -381,6 +469,209 @@ const Home = () => {
             >
               Отмена
             </button>
+          </div>
+        </div>
+      ) : null}
+      {commentModal ? (
+        <div
+          style={{ background: "rgba(0, 0, 0, 0.5)" }}
+          className="fixed  top-0 left-0 w-[100%] z-10 h-[100vh] grid"
+        >
+          <span
+            onClick={() => {
+              setCommentModal(false);
+            }}
+            className="text-gray-200 cursor-pointer justify-self-end text-4xl mr-3"
+          >
+            &times;
+          </span>
+          <div className="bg-blue-200 w-[1200px]  modal-content">
+            <div className="grid grid-cols-2">
+              <div>
+                <img
+                  src={`${import.meta.env.VITE_APP_FILES_URL}${
+                    postById.images
+                  }`}
+                  className=" h-[650px]"
+                  alt=""
+                />
+              </div>
+
+              <div className="my-5 mx-5">
+                <div className="top flex justify-between items-center">
+                  <span className=" ">
+                    {userId.map((e) => {
+                      console.log(e.id);
+                      if (postById.userId == e.id) {
+                        return (
+                          <div className="flex items-center gap-4 ">
+                            <img
+                              src={`${import.meta.env.VITE_APP_FILES_URL}${
+                                e.avatar
+                              }`}
+                              className="w-[13%] rounded-full"
+                              alt=""
+                            />
+                            <span className="text-md font-semibold">
+                              {e.userName}
+                            </span>
+                          </div>
+                        );
+                      }
+                    })}
+                  </span>
+                  <div
+                    className=""
+                    onClick={() => {
+                      setMore(true);
+                    }}
+                  >
+                    <IconButton>
+                      <MoreHorizIcon />
+                    </IconButton>
+                  </div>
+                </div>
+                <div>Comment</div>
+                <div>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <IconButton
+                        className=""
+                        onClick={() => {
+                          PostLike(postById.postId); // Toggle the value
+                        }}
+                      >
+                        {postById.postLike ? (
+                          <span className="x1ykxiw6 x1ahuga x4hg4is x3oybdh">
+                            <svg
+                              aria-label="Не нравится"
+                              className="x1lliihq x1n2onr6 xxk16z8 "
+                              fill="red"
+                              height="24"
+                              role="img"
+                              viewBox="0 0 48 48"
+                              width="24"
+                            >
+                              <title>Не нравится</title>
+                              <path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path>
+                            </svg>
+                          </span>
+                        ) : (
+                          <svg
+                            aria-label="Нравится"
+                            className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
+                            color="rgb(38, 38, 38)"
+                            fill="rgb(38, 38, 38)"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Нравится</title>
+                            <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
+                          </svg>
+                        )}
+                      </IconButton>
+                      <IconButton onClick={() => {}}>
+                        <svg
+                          aria-label="Комментировать"
+                          className="x1lliihq x1n2onr6 dark:text-white"
+                          color="rgb(38, 38, 38)"
+                          fill="rgb(38, 38, 38)"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>Комментировать</title>
+                          <path
+                            d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></path>
+                        </svg>
+                      </IconButton>
+                      <IconButton>
+                        <svg
+                          ariaLabel="Поделиться публикацией"
+                          className="x1lliihq x1n2onr6 dark:text-white"
+                          color="rgb(38, 38, 38)"
+                          fill="rgb(38, 38, 38)"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>Поделиться публикацией</title>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            x1="22"
+                            x2="9.218"
+                            y1="3"
+                            y2="10.083"
+                          ></line>
+                          <polygon
+                            fill="none"
+                            points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                          ></polygon>
+                        </svg>
+                      </IconButton>
+                    </div>
+                    <div>
+                      <IconButton
+                        onClick={() => {
+                          PostFavorites(postById.postId);
+                        }}
+                      >
+                        {postById?.postFavorite ? (
+                          <svg
+                            aria-label="Сохранить"
+                            class="x1lliihq x1n2onr6"
+                            color="rgb(0, 0, 0)"
+                            fill="rgb(0, 0, 0)"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Сохранить</title>
+                            <polygon
+                              fill="none"
+                              points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            ></polygon>
+                          </svg>
+                        ) : (
+                          <svg
+                            aria-label="Удалить"
+                            class="x1lliihq x1n2onr6 x5n08af"
+                            fill="currentColor"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>Удалить</title>
+                            <path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path>
+                          </svg>
+                        )}
+                      </IconButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}
