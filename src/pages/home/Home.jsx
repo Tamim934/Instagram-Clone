@@ -24,7 +24,8 @@ const Home = () => {
 
   const [post, setPost] = useState([]);
   const [postById, setPostById] = useState([]);
-
+  const [postComments, setPostComments] = useState([]);
+  const [idx, setIdx] = useState(null); // const [postFavorites, setPostFavorites] = useState([]);
   const [userId, userUserId] = useState([]);
   const [commentModal, setCommentModal] = useState(false);
   const PostId = getToken()?.pid;
@@ -32,19 +33,33 @@ const Home = () => {
   const getPost = async () => {
     try {
       const { data } = await axiosRequest.get(`Post/get-posts`);
-      console.log(data.data);
+
       setPost(data.data.reverse());
     } catch (error) {
       console.log(error);
     }
   };
+  const deleteComment = async (id) => {
+    console.log(id);
+    try {
+      const { data } = await axiosRequest.delete(
+        `Post/delete_comment?commentId=${id}`
+      );
+      setPostById(data.data);
+    } catch (error) {}
+  };
   const getPostById = async (id) => {
-    console.log(1);
-    console.log();
     try {
       const { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
-      console.log(data.data);
       setPostById(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getPostComments = async () => {
+    try {
+      const { data } = await axiosRequest.get(`Post/get-post-comments`);
+      setPostComments(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +88,6 @@ const Home = () => {
   const getUserId = async () => {
     try {
       const { data } = await axiosRequest.get(`User/get-users?id`);
-      console.log(data.data);
       userUserId(data.data);
     } catch (error) {
       console.log(error);
@@ -145,30 +159,22 @@ const Home = () => {
             </SwiperSlide>
             <SwiperSlide>
               <Stories />
-            </SwiperSlide>{" "}
+            </SwiperSlide>
             <SwiperSlide>
               <Stories />
-            </SwiperSlide>{" "}
+            </SwiperSlide>
             <SwiperSlide>
               <Stories />
-            </SwiperSlide>{" "}
+            </SwiperSlide>
             <SwiperSlide>
               <Stories />
-            </SwiperSlide>{" "}
+            </SwiperSlide>
             <SwiperSlide>
               <Stories />
             </SwiperSlide>
           </Swiper>
         </div>
-        {/* {post.map((e) => {
-          return (
-            <div key={e.postId}>
-              {e.images.map((e) => {
-                return <img src={`${PostImagesApi}/${e}`} alt="img" />;
-              })}
-            </div>
-          );
-        })} */}
+
         {post.map((e) => {
           return (
             <div
@@ -194,13 +200,13 @@ const Home = () => {
                             src={`${import.meta.env.VITE_APP_FILES_URL}${
                               el.avatar
                             }`}
-                            className="w-[25%] rounded-full"
+                            className="w-[18%] rounded-full"
                             alt=""
                           />
                           <p>
                             <Link
                               className="font-semibold"
-                              to={"profile"}
+                              to={"/home/profile"}
                             >{`${el.userName}`}</Link>
                             <span className="text-gray-400 ml-2">• 1 дн.</span>
                           </p>
@@ -260,11 +266,11 @@ const Home = () => {
                           PostLike(e.postId); // Toggle the value
                         }}
                       >
-                        {console.log(e.postFavorite)}
+                        {/* {console.log(e.postFavorite)} */}
                         {e.postLike ? (
                           <span className="x1ykxiw6 x1ahuga x4hg4is x3oybdh">
                             <svg
-                              aria-label="Не нравится"
+                              ariaLabel="Не нравится"
                               className="x1lliihq x1n2onr6 xxk16z8 "
                               fill="red"
                               height="24"
@@ -278,7 +284,7 @@ const Home = () => {
                           </span>
                         ) : (
                           <svg
-                            aria-label="Нравится"
+                            ariaLabel="Нравится"
                             className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
                             color="rgb(38, 38, 38)"
                             fill="rgb(38, 38, 38)"
@@ -296,10 +302,11 @@ const Home = () => {
                         onClick={() => {
                           getPostById(e.postId);
                           setCommentModal(true);
+                          getPostComments();
                         }}
                       >
                         <svg
-                          aria-label="Комментировать"
+                          ariaLabel="Комментировать"
                           className="x1lliihq x1n2onr6 dark:text-white"
                           color="rgb(38, 38, 38)"
                           fill="rgb(38, 38, 38)"
@@ -313,8 +320,8 @@ const Home = () => {
                             d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
                             fill="none"
                             stroke="currentColor"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                           ></path>
                         </svg>
                       </IconButton>
@@ -344,8 +351,8 @@ const Home = () => {
                             fill="none"
                             points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
                             stroke="currentColor"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                           ></polygon>
                         </svg>
                       </IconButton>
@@ -353,13 +360,13 @@ const Home = () => {
                     <div>
                       <IconButton
                         onClick={() => {
-                          PostFavorites(e.postId);
+                          PostFavorites(e.postFavorite);
                         }}
                       >
-                        {e?.postFavorite ? (
+                        {e.postFavorite ? (
                           <svg
-                            aria-label="Сохранить"
-                            class="x1lliihq x1n2onr6"
+                            ariaLabel="Сохранить"
+                            className="x1lliihq x1n2onr6"
                             color="rgb(0, 0, 0)"
                             fill="rgb(0, 0, 0)"
                             height="24"
@@ -372,14 +379,14 @@ const Home = () => {
                               fill="none"
                               points="20 21 12 13.44 4 21 4 3 20 3 20 21"
                               stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                             ></polygon>
                           </svg>
                         ) : (
                           <svg
-                            aria-label="Удалить"
+                            ariaLabel="Удалить"
                             class="x1lliihq x1n2onr6 x5n08af"
                             fill="currentColor"
                             height="24"
@@ -450,6 +457,15 @@ const Home = () => {
             <button className="hover:bg-gray-300 text-red-600 font-bold rounded-2xl p-5">
               Пожаловаться
             </button>
+            <button
+              onClick={() => {
+                deleteComment(idx);
+                setMore(false);
+              }}
+              className="hover:bg-gray-300 text-red-600 font-bold  p-5"
+            >
+              Delete
+            </button>
             <button className="hover:bg-gray-300 text-red-500 font-semibold  p-5">
               Отменить подписку
             </button>
@@ -485,23 +501,22 @@ const Home = () => {
           >
             &times;
           </span>
-          <div className="bg-blue-200 w-[1200px]  modal-content">
-            <div className="grid grid-cols-2">
-              <div>
+          <div className=" w-[1200px]  modal-content">
+            <div className="grid h-[620px]  bg-black grid-cols-[1.3fr,1fr]">
+              <div className="self-center ">
                 <img
                   src={`${import.meta.env.VITE_APP_FILES_URL}${
                     postById.images
                   }`}
-                  className=" h-[650px]"
+                  className=" self-center items-center w-auto"
                   alt=""
                 />
               </div>
 
-              <div className="my-5 mx-5">
+              <div className="py-3  px-3 bg-white">
                 <div className="top flex justify-between items-center">
                   <span className=" ">
                     {userId.map((e) => {
-                      console.log(e.id);
                       if (postById.userId == e.id) {
                         return (
                           <div className="flex items-center gap-4 ">
@@ -531,7 +546,123 @@ const Home = () => {
                     </IconButton>
                   </div>
                 </div>
-                <div>Comment</div>
+                <div className="overflow-auto h-[450px]  grid gap-5 px-10 py-10">
+                  {/* {post.map((e) => {
+                    return (
+                      <div className=" ">
+                        <div className="">
+                          {userId.map((el) => {
+                            if (el.id == e.userId) {
+                              return (
+                                <div className="grid grid-cols-[3fr,1fr]">
+                                  <Link
+                                    key={el.id}
+                                    className="w-[50%]"
+                                    to={"/profile"}
+                                  >
+                                    <div
+                                      className="flex items-center gap-2 "
+                                      onTouchMoveCapture={() =>
+                                        setProfileModal()
+                                      }
+                                    >
+                                      <img
+                                        src={`${
+                                          import.meta.env.VITE_APP_FILES_URL
+                                        }${el.avatar}`}
+                                        className="w-[15%]  rounded-full"
+                                        alt=""
+                                      />
+                                      <p>
+                                        <Link
+                                          className="font-semibold"
+                                          to={"/home/profile"}
+                                        >{`${el.userName}`}</Link>
+                                        <span className="text-gray-400 ml-2">
+                                          • 1 дн.
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </Link>
+                                  <div>
+                                    {e.comments.map((e) => {
+                                      if (e.comment.trim().length == 0) {
+                                        return null;
+                                      } else {
+                                        return <div>{e.comment}</div>;
+                                      }
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            }
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })} */}
+                  {postComments.map((e) => {
+                    console.log(e);
+                    return (
+                      <>
+                        <div className="flex flex-wrap items-center">
+                          <div className="w-[45%]">
+                            {userId.map((el) => {
+                              if (e.userId == el.id) {
+                                return (
+                                  <div>
+                                    <Link
+                                      key={el.id}
+                                      className="w-[10%]"
+                                      to={"/profile"}
+                                    >
+                                      <div
+                                        className="flex items-center gap-2 "
+                                        onTouchMoveCapture={() =>
+                                          setProfileModal()
+                                        }
+                                      >
+                                        <img
+                                          src={`${
+                                            import.meta.env.VITE_APP_FILES_URL
+                                          }${el.avatar}`}
+                                          className="w-[14%] rounded-full"
+                                          alt=""
+                                        />
+                                        <p>
+                                          <Link
+                                            className="font-semibold"
+                                            to={"/home/profile"}
+                                          >{`${el.userName}`}</Link>
+                                          <span className="text-gray-400 ml-2">
+                                            • 1 дн.
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </Link>
+                                  </div>
+                                );
+                              }
+                              return;
+                            })}
+                          </div>
+                          <div>{e.comment}</div>
+
+                          <div
+                            className=""
+                            onClick={() => {
+                              setMore(true), setIdx(e.postCommentId);
+                            }}
+                          >
+                            <IconButton>
+                              <MoreHorizIcon />
+                            </IconButton>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
                 <div>
                   <div className="flex justify-between items-center">
                     <div>
@@ -628,7 +759,7 @@ const Home = () => {
                     <div>
                       <IconButton
                         onClick={() => {
-                          PostFavorites(postById.postId);
+                          PostFavorites(e.postFavorite);
                         }}
                       >
                         {postById?.postFavorite ? (
