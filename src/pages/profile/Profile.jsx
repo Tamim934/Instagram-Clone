@@ -285,7 +285,7 @@ return(
             src="/src/assets/imagesuserprofile/user.png"
             className="w-[16px]"
             alt=""
-          />{" "}
+          />
           Tagged
         </button>
       </div>
