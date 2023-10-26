@@ -18,6 +18,31 @@ import { handleChangeSearch } from '../reducers/instagram'
 
 const Layout = () => {
 
+  // search ↓
+
+  const searchModal = useSelector((store) => store.data.searchModal)
+  const dispatch = useDispatch()
+  
+  const [users, setUsers] = useState([])
+  const [search, setSearch] = useState("")
+
+  async function searchUsers(){
+    try {
+      let {data} = await axiosRequest.get("User/get-users")
+      setUsers(data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    searchUsers()
+  }, [])
+
+  // search ↑
+
+  // newPost ↓
+
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [posts, setPosts] = useState([])
@@ -53,12 +78,24 @@ const Layout = () => {
     }
   }
 
+  const [open, setOpen] = React.useState(false);
+
+  const openPostModal = () => {
+    setOpen(true);
+  };
+
+  const closePostModal = () => {
+    setOpen(false);
+  };
+
   const [postImg, setPostImg] = useState(null)
 
   const handlePostImage = async (event) => {
     let file = await FileToBase64(event.target.files[0]);
     setPostImg(file);
   };
+
+  // newPost ↑
 
   const { pathname } = useLocation();
 
@@ -73,21 +110,6 @@ const Layout = () => {
   useEffect(() => {
     AOS.init()
   }, [])
-
-  const searchModal = useSelector((store) => store.data.searchModal)
-  const dispatch = useDispatch()
-
-  // const [searchModal, setSearchModal] = useState(false)
-
-  const [open, setOpen] = React.useState(false);
-
-  const openPostModal = () => {
-    setOpen(true);
-  };
-
-  const closePostModal = () => {
-    setOpen(false);
-  };
 
   const [icon, setIcon] = useState(false)
 
@@ -167,7 +189,7 @@ const Layout = () => {
             </Link>
             
             <div style={searchModal ? {width:"48px"} : null} className='w-[48px] xl:w-[220px] h-[56px] pt-[4px]'>
-                <div onClick={() => dispatch(handleChangeSearch(!searchModal))} style={searchModal ? {width:"48px"} : null} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer'>
+                <div onClick={() => dispatch(handleChangeSearch(!searchModal))} style={searchModal ? {width:"48px", border:"1px solid #DBDBDB"} : null} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer'>
                 
                 <div className='flex items-center gap-[16px]'>
                 <div className='dark:hidden'>
@@ -358,8 +380,49 @@ const Layout = () => {
 
         {
           searchModal ?
-          <div className='absolute bottom-[0] left-[72px] z-50  w-[397px] h-[100vh] bg-amber-300' data-aos="fade-right">
-            <h1>QWERTY</h1>
+          <div className='searchModal absolute bottom-[0] left-[72px] z-50  w-[397px] h-[100vh] bg-white dark:bg-black overflow-y-auto' data-aos="fade-right">
+            <div className='pl-[16.33px]'>
+              <br />
+              <span className='text-black dark:text-white text-[24px] font-medium'>Поисковый запрос</span>
+              <br /><br />
+              <input value={search} onChange={(event) => setSearch(event.target.value)}  type="search" placeholder='Поиск' className='bg-[#EFEFEF] dark:bg-[#262626] text-[#737373] dark:text-[#A8A8A8] w-[364.33px] h-[40px] rounded-[8px] py-[3px] px-[16px] outline-none' />
+            </div>
+            <br />
+            <hr />
+            <br />
+            {
+            search.length <= 0 &&
+            <div className='pl-[16.33px]'>
+              <span className='text-black dark:text-white text-[16px] font-medium'>Недавнее</span>
+            </div>
+            }         
+            <div>
+              <div className='pl-[16.33px]'>
+                {search == "" ? (false) : (
+                  <div>
+                    {users?.filter((e) => e?.userName?.toLowerCase()?.includes(search?.toLowerCase()))
+                    .map((e) => {
+                      return (
+                        <div key={e.id} onClick={() => navigate(`/searchprofile/${e.id}`)} className='flex items-center gap-[12px] py-[8px] px-[24px]'>
+                          {e.avatar == null || e.avatar == "" ? (
+                            <img src={userimage} alt="" className='w-[44px] h-[44px] rounded-[50%]' />
+                          ) : (
+                            <img src={`${import.meta.env.VITE_APP_FILES_URL}${e.avatar}`} alt="" className='w-[44px] h-[44px] rounded-[50%]' />
+                          )}
+                          <span className='text-black dark:text-white text-[14px] font-medium'>{e.userName}</span>        
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+            {
+            search.length <= 0 &&
+            <div className='flex justify-center'>
+              <span className='text-[#737373] dark:text-[#A8A8A8] text-[14px]'>Нет недавних запросов.</span>
+            </div>
+            }
           </div>
           : null
         }
