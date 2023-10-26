@@ -27,7 +27,7 @@ function App() {
 
         },
         {
-          path: "searchprofile",
+          path: "searchprofile/:id",
           element: <SearchProfile />,
         },
         {
