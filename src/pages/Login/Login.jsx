@@ -13,8 +13,9 @@ import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { axiosRequest, getToken, saveToken } from "../../utilities/axiosRequest";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import Regestrition from "../Regeistretion/Regestrition";
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -133,10 +134,13 @@ const Login = () => {
             <h1 className="text-center pb-[20px]">Забыли пароль?</h1>
           </div>
           <div className="sm:border-[2px] my-[20px] px-[40px] py-[20px] text-center">
+          <Link to={"/regestrition"}>
             <h1 className="xs:text-[10px] sm:text-[17px]">
               У вас ещё нет аккаунта?
               <span className="text-[blue]">Зарегистрироваться</span>
             </h1>
+          </Link> 
+          
           </div>
           <h1 className="text-center py-[20px]">Установите приложение.</h1>
           <img className="m-auto" src="src/assets/swiper1Sh.jpg" alt="" />

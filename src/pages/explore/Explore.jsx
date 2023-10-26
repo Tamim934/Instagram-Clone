@@ -9,31 +9,25 @@ const Explore = () => {
   const PostImagesExApi = "http://65.108.148.136:8085/images";
   const [postEx, setPostEx] = useState([]);
   const PostId = getToken()?.pid;
-const [users,setUsers]= useState([])
-const [modalObj,setModalObj] = useState()
+  const [users,setUsers]= useState([]);
+  const [modalObj,setModalObj] = useState();
+  const [isHovered, setIsHovered] = useState([]);
 
-console.log(PostId)
-  const getPostEx = async () => {
-    try {
-      const { data } = await axiosRequest.get(`Post/get-posts`);
-      console.log(data.data);
-      setPostEx(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getUsers = async () => {
-    try {
-      const { data } = await axiosRequest.get(`User/get-users`);
-      console.log(data.data);
-      setUsers(data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   useEffect(() => {
-    getPostEx();
-  getUsers()
+    const fetchPostsAndUsers = async () => {
+      try {
+        const { data: postData } = await axiosRequest.get(`Post/get-posts`);
+        setPostEx(postData.data);
+        setIsHovered(new Array(postData.data.length).fill(false));
+
+        const { data: userData } = await axiosRequest.get(`User/get-users`);
+        setUsers(userData.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPostsAndUsers();
   }, []);
   
   const handleClick = (element) => {
@@ -42,8 +36,6 @@ console.log(PostId)
     setModalObj({ ...element, user });
   };
   
-  
-console.log(modalObj)
   const handleClose = () => {
     setShowModal(false);
   };
@@ -52,23 +44,36 @@ console.log(modalObj)
 
   return (
     <div className="gap-[20px] pt-[20px] w-[80%] grid grid-cols-3 ml-[10%]">
-      {postEx.map((e) => {
+      {postEx.map((e, index) => {
         return (
-          <div className="flex imggg relative" key={e.postId}>
-  <img
-  onClick={() => {
-    handleClick(e)
-   
-  }}
-  className="w-[400px]"
-  src={`${PostImagesExApi}/${e.images[0]}`}
-  alt="img"
-  onError={(event) => {
-    event.target.src = fallbackImageURL;
-  }}
-/>
-
-
+          <div 
+          onClick={() => handleClick(e)}  
+          className="flex imggg relative" 
+            key={e.postId}
+            onMouseEnter={() => setIsHovered(oldState => {
+              const newState = [...oldState];
+              newState[index] = true;
+              return newState;
+            })}
+            onMouseLeave={() => setIsHovered(oldState => {
+              const newState = [...oldState];
+              newState[index] = false;
+              return newState;
+            })}
+          >
+            <img
+              
+              className="w-[400px]"
+              src={`${PostImagesExApi}/${e.images[0]}`}
+              alt="img"
+              onError={(event) => event.target.src = fallbackImageURL}
+            />
+            {isHovered[index] && (
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center gap-[30px] justify-center p-4">
+                <p className="text-white flex items-center gap-[5px]">🤍 {e.postLikeCount}</p>
+                <p className="text-white flex items-center gap-[5px]">💬 {e.comments.length}</p>
+              </div>
+            )}
             {e.images.length > 1 && (
               <div className="absolute top-0 right-0">
                 <PhotoLibraryIcon/> 
@@ -83,8 +88,6 @@ console.log(modalObj)
 };
 
 export default Explore;
-
-
 
 
 {/* <div class="container">
