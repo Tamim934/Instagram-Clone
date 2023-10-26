@@ -403,7 +403,7 @@ const Layout = () => {
                     {users?.filter((e) => e?.userName?.toLowerCase()?.includes(search?.toLowerCase()))
                     .map((e) => {
                       return (
-                        <div key={e.id} onClick={() => navigate(`/searchprofile/${e.id}`)} className='flex items-center gap-[12px] py-[8px] px-[24px]'>
+                        <div key={e.id} onClick={() => navigate(`searchprofile/${e.id}`)} className='flex items-center gap-[12px] py-[8px] px-[24px]'>
                           {e.avatar == null || e.avatar == "" ? (
                             <img src={userimage} alt="" className='w-[44px] h-[44px] rounded-[50%]' />
                           ) : (
