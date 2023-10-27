@@ -559,61 +559,7 @@ const Home = () => {
                     </IconButton>
                   </div>
                 </div>
-                <div className="overflow-auto h-[450px]  grid gap-5 px-10 py-10">
-                  {/* {post.map((e) => {
-                    return (
-                      <div className=" ">
-                        <div className="">
-                          {userId.map((el) => {
-                            if (el.id == e.userId) {
-                              return (
-                                <div className="grid grid-cols-[3fr,1fr]">
-                                  <Link
-                                    key={el.id}
-                                    className="w-[50%]"
-                                    to={"/profile"}
-                                  >
-                                    <div
-                                      className="flex items-center gap-2 "
-                                      onTouchMoveCapture={() =>
-                                        setProfileModal()
-                                      }
-                                    >
-                                      <img
-                                        src={`${
-                                          import.meta.env.VITE_APP_FILES_URL
-                                        }${el.avatar}`}
-                                        className="w-[15%]  rounded-full"
-                                        alt=""
-                                      />
-                                      <p>
-                                        <Link
-                                          className="font-semibold"
-                                          to={"/home/profile"}
-                                        >{`${el.userName}`}</Link>
-                                        <span className="text-gray-400 ml-2">
-                                          • 1 дн.
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </Link>
-                                  <div>
-                                    {e.comments.map((e) => {
-                                      if (e.comment.trim().length == 0) {
-                                        return null;
-                                      } else {
-                                        return <div>{e.comment}</div>;
-                                      }
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            }
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })} */}
+                <div className="overflow-auto h-[420px]   grid gap-5 px-10 py-10">
                   {postComments.map((e) => {
                     console.log(e);
                     return (
@@ -812,6 +758,23 @@ const Home = () => {
                         )}
                       </IconButton>
                     </div>
+                  </div>
+                  <div className="ml-2 flex">
+                    {userId.map((el) => {
+                      if (el.id == postById.userId) {
+                        return (
+                          <>
+                            <p className="font-semibold ">
+                              {postById.postLikeCount < 0
+                                ? postById.postLikeCount * -1
+                                : postById.postLikeCount}
+                              <span className="mx-[3px]"></span>
+                              отметок "Нравится"
+                            </p>
+                          </>
+                        );
+                      }
+                    })}
                   </div>
                 </div>
                 <div className="border-t justify-between px-10 mt-5 pt-1 flex items-center ">
