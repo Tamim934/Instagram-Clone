@@ -25,6 +25,7 @@ const Home = () => {
   const [post, setPost] = useState([]);
   const [postById, setPostById] = useState([]);
   const [postComments, setPostComments] = useState([]);
+  const [comment, setComment] = useState("");
   const [idx, setIdx] = useState(null); // const [postFavorites, setPostFavorites] = useState([]);
   const [userId, userUserId] = useState([]);
   const [commentModal, setCommentModal] = useState(false);
@@ -37,6 +38,18 @@ const Home = () => {
       setPost(data.data.reverse());
     } catch (error) {
       console.log(error);
+    }
+  };
+  const AddComment = async ({ comment, postId }) => {
+    try {
+      const { data } = await axiosRequest.post(`Post/add_comment`, {
+        comment,
+        postId,
+      });
+      console.log(data);
+      getPost(data.data);
+    } catch (error) {
+      console.error(error);
     }
   };
   const deleteComment = async (id) => {
@@ -800,6 +813,34 @@ const Home = () => {
                       </IconButton>
                     </div>
                   </div>
+                </div>
+                <div className="border-t justify-between px-10 mt-5 pt-1 flex items-center ">
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(event) => {
+                      setComment(event.target.value);
+                    }}
+                    className="outline-none w-[80%]   py-2.5 overflow-auto "
+                  />
+                  <button>
+                    {comment.trim().length == 0 ? (
+                      <div className="text-blue-100">Post</div>
+                    ) : (
+                      <div
+                        onClick={() => {
+                          AddComment({
+                            comment: comment,
+                            postId: postById.postId,
+                          });
+                          setComment("");
+                        }}
+                        className="text-blue-500"
+                      >
+                        Post
+                      </div>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
