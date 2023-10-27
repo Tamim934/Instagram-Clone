@@ -8,6 +8,7 @@ import Profile from './pages/profile/Profile'
 import NotFound from './pages/notfound/NotFound'
 import SearchProfile from "./pages/searchProfile/SearchProfile"
 import Login from "./pages/Login/Login"
+import Regestrition from "./pages/Regeistretion/Regestrition"
 
 function App() {
 
@@ -26,7 +27,7 @@ function App() {
 
         },
         {
-          path: "searchprofile",
+          path: "searchprofile/:id",
           element: <SearchProfile />,
         },
         {
@@ -46,8 +47,13 @@ function App() {
           element: <Profile />,
         },
         
+        
 
       ],
+    },
+    {
+      path: "regestrition",
+      element: <Regestrition/>,
     },
     {
       path: "*",
