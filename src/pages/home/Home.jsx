@@ -23,8 +23,11 @@ const Home = () => {
   // const LikePostApi = "http://65.108.148.136:8085/Post/like-Post?id";
 
   const [post, setPost] = useState([]);
+  const [story, setStory] = useState([]);
   const [postById, setPostById] = useState([]);
-
+  const [postComments, setPostComments] = useState([]);
+  const [comment, setComment] = useState("");
+  const [idx, setIdx] = useState(null); // const [postFavorites, setPostFavorites] = useState([]);
   const [userId, userUserId] = useState([]);
   const [commentModal, setCommentModal] = useState(false);
   const PostId = getToken()?.pid;
@@ -32,19 +35,55 @@ const Home = () => {
   const getPost = async () => {
     try {
       const { data } = await axiosRequest.get(`Post/get-posts`);
-      console.log(data.data);
+
       setPost(data.data.reverse());
     } catch (error) {
       console.log(error);
     }
   };
+  const GetStories = async () => {
+    try {
+      const { data } = await axiosRequest.get(`Story/get-stories`);
+      setStory(data.data);
+      console.log(data.data);
+      console.log(story);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const AddComment = async ({ comment, postId }) => {
+    try {
+      const { data } = await axiosRequest.post(`Post/add_comment`, {
+        comment,
+        postId,
+      });
+      console.log(data);
+      getPost(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const deleteComment = async (id) => {
+    console.log(id);
+    try {
+      const { data } = await axiosRequest.delete(
+        `Post/delete_comment?commentId=${id}`
+      );
+      setPostById(data.data);
+    } catch (error) {}
+  };
   const getPostById = async (id) => {
-    console.log(1);
-    console.log();
     try {
       const { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
-      console.log(data.data);
       setPostById(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getPostComments = async () => {
+    try {
+      const { data } = await axiosRequest.get(`Post/get-post-comments`);
+      setPostComments(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +91,8 @@ const Home = () => {
 
   useEffect(() => {
     getPost();
-    // getPostById();
+    GetStories();
+    getUserId();
   }, []);
   const PostLike = async (id) => {
     try {
@@ -73,42 +113,38 @@ const Home = () => {
   const getUserId = async () => {
     try {
       const { data } = await axiosRequest.get(`User/get-users?id`);
-      console.log(data.data);
       userUserId(data.data);
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getUserId();
-  }, []);
 
   const [more, setMore] = useState(false);
   return (
-    <div className="flex  dark:text-white  w-[100%]  justify-center lg:justify-between">
-      <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[90%] ">
+    <div className="flex  dark:text-white relative -z-50  w-[100%]  justify-center lg:justify-between">
+      <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[80%] ml-auto">
         <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10 ">
           <Swiper
             // spaceBetween={30}
             breakpoints={{
               300: {
-                slidesPerView: 2,
+                slidesPerView: 4,
                 spaceBetween: 10,
               },
               540: {
-                slidesPerView: 3,
+                slidesPerView: 5,
                 spaceBetween: 15,
               },
               724: {
-                slidesPerView: 4,
+                slidesPerView: 6,
                 spaceBetween: 20,
               },
               1024: {
-                slidesPerView: 5,
+                slidesPerView: 7,
                 spaceBetween: 25,
               },
               1224: {
-                slidesPerView: 6,
+                slidesPerView: 8,
                 spaceBetween: 30,
               },
               2024: {
@@ -117,62 +153,37 @@ const Home = () => {
               },
             }}
             modules={[Navigation]}
-            className="mySwiper"
+            className="mySwiper items-center grid"
           >
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>{" "}
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>{" "}
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>{" "}
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>{" "}
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
+            {story.map((e, index) => {
+              return (
+                <div key={index} className="rounded-full">
+                  <SwiperSlide>
+                    {e.userAvatar == null || e.userAvatar == "" ? (
+                      <img
+                        src="https://th.bing.com/th/id/OIP.Gfp0lwE6h7139625a-r3aAHaHa?pid=ImgDet&rs=1"
+                        alt=""
+                      />
+                    ) : (
+                      <img
+                        src={`${import.meta.env.VITE_APP_FILES_URL}${
+                          e.userAvatar
+                        }`}
+                        className="w-auto h-auto  rounded-[100%]"
+                        alt=""
+                      />
+                    )}
+                  </SwiperSlide>
+                </div>
+              );
+            })}
           </Swiper>
         </div>
-        {/* {post.map((e) => {
-          return (
-            <div key={e.postId}>
-              {e.images.map((e) => {
-                return <img src={`${PostImagesApi}/${e}`} alt="img" />;
-              })}
-            </div>
-          );
-        })} */}
-        {post.map((e) => {
+        {/* POSTS */}
+        {post.map((e, index) => {
           return (
             <div
-              key={e.userId}
+              key={index}
               className="w-[80%] border-b pb-5 mb-5 dark:bg-black sm:w-[75%] md:w-[70%]  2xl:w-[60%] mx-auto mt-5"
             >
               <div className="flex items-center mb-2 justify-between">
@@ -185,22 +196,21 @@ const Home = () => {
                           onTouchMoveCapture={() => setProfileModal()}
                         >
                           {/* <img
-                            className="w-[10%]"
-                            src="38f1a729-7d1b-407d-9368-7f39997c43b5.jpeg"
-                            // src="https://static.vecteezy.com/system/resources/previews/019/896/008/original/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"
-                            alt=""
-                          /> */}
-                          <img
                             src={`${import.meta.env.VITE_APP_FILES_URL}${
                               el.avatar
                             }`}
-                            className="w-[25%] rounded-full"
+                            className="w-[18%] rounded-full"
                             alt=""
+                          /> */}
+                          <img
+                            className="rounded dark:bg-black"
+                            src={`${PostImagesApi}/${el}`}
+                            alt="img"
                           />
                           <p>
                             <Link
                               className="font-semibold"
-                              to={"profile"}
+                              to={"/home/profile"}
                             >{`${el.userName}`}</Link>
                             <span className="text-gray-400 ml-2">• 1 дн.</span>
                           </p>
@@ -260,11 +270,11 @@ const Home = () => {
                           PostLike(e.postId); // Toggle the value
                         }}
                       >
-                        {console.log(e.postFavorite)}
+                        {/* {console.log(e.postFavorite)} */}
                         {e.postLike ? (
                           <span className="x1ykxiw6 x1ahuga x4hg4is x3oybdh">
                             <svg
-                              aria-label="Не нравится"
+                              ariaLabel="Не нравится"
                               className="x1lliihq x1n2onr6 xxk16z8 "
                               fill="red"
                               height="24"
@@ -278,7 +288,7 @@ const Home = () => {
                           </span>
                         ) : (
                           <svg
-                            aria-label="Нравится"
+                            ariaLabel="Нравится"
                             className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
                             color="rgb(38, 38, 38)"
                             fill="rgb(38, 38, 38)"
@@ -296,10 +306,11 @@ const Home = () => {
                         onClick={() => {
                           getPostById(e.postId);
                           setCommentModal(true);
+                          getPostComments();
                         }}
                       >
                         <svg
-                          aria-label="Комментировать"
+                          ariaLabel="Комментировать"
                           className="x1lliihq x1n2onr6 dark:text-white"
                           color="rgb(38, 38, 38)"
                           fill="rgb(38, 38, 38)"
@@ -313,8 +324,8 @@ const Home = () => {
                             d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
                             fill="none"
                             stroke="currentColor"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                           ></path>
                         </svg>
                       </IconButton>
@@ -344,8 +355,8 @@ const Home = () => {
                             fill="none"
                             points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
                             stroke="currentColor"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                           ></polygon>
                         </svg>
                       </IconButton>
@@ -353,13 +364,13 @@ const Home = () => {
                     <div>
                       <IconButton
                         onClick={() => {
-                          PostFavorites(e.postId);
+                          PostFavorites(e.postFavorite);
                         }}
                       >
-                        {e?.postFavorite ? (
+                        {e.postFavorite ? (
                           <svg
-                            aria-label="Сохранить"
-                            class="x1lliihq x1n2onr6"
+                            ariaLabel="Сохранить"
+                            className="x1lliihq x1n2onr6"
                             color="rgb(0, 0, 0)"
                             fill="rgb(0, 0, 0)"
                             height="24"
@@ -372,14 +383,14 @@ const Home = () => {
                               fill="none"
                               points="20 21 12 13.44 4 21 4 3 20 3 20 21"
                               stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
                             ></polygon>
                           </svg>
                         ) : (
                           <svg
-                            aria-label="Удалить"
+                            ariaLabel="Удалить"
                             class="x1lliihq x1n2onr6 x5n08af"
                             fill="currentColor"
                             height="24"
@@ -423,8 +434,9 @@ const Home = () => {
           );
         })}
       </div>
-      <div className="w-[50%] hidden lg:block  pt-14 mr-20">
-        <div className="w-[100%] grid gap-5">
+      {/* FYP */}
+      <div className="w-[50%] hidden lg:block  justify-self-end pt-14 mr-20">
+        <div className="w-[100%] grid justify-end gap-5">
           <FYP />
           <p className="flex gap-8 w-[90%] mx-auto">
             Рекомендации для вас <span className="">Все</span>{" "}
@@ -441,6 +453,7 @@ const Home = () => {
           </p>
         </div>
       </div>
+      {/* MODALS */}
       {more ? (
         <div
           style={{ background: "rgba(0, 0, 0, 0.5)" }}
@@ -449,6 +462,15 @@ const Home = () => {
           <div className="grid  modal-content rounded-2xl">
             <button className="hover:bg-gray-300 text-red-600 font-bold rounded-2xl p-5">
               Пожаловаться
+            </button>
+            <button
+              onClick={() => {
+                deleteComment(idx);
+                setMore(false);
+              }}
+              className="hover:bg-gray-300 text-red-600 font-bold  p-5"
+            >
+              Delete
             </button>
             <button className="hover:bg-gray-300 text-red-500 font-semibold  p-5">
               Отменить подписку
@@ -485,23 +507,64 @@ const Home = () => {
           >
             &times;
           </span>
-          <div className="bg-blue-200 w-[1200px]  modal-content">
-            <div className="grid grid-cols-2">
-              <div>
+          <div className=" w-[1200px]  modal-content">
+            <div className="grid h-[620px]  bg-black grid-cols-[1.3fr,1fr]">
+              <div className="self-center ">
+                {/* {post.images.length() > 1 ? (
+                  <div>
+                    <Swiper
+                      pagination={{
+                        type: "fraction",
+                      }}
+                      navigation={true}
+                      modules={[Pagination, Navigation]}
+                      className="mySwiper"
+                    >
+                      {postById.images.map((ell) => {
+                        return (
+                          <SwiperSlide className="dark:bg-black">
+                            <img
+                              onDoubleClick={() => {
+                                PostLike(postById.postId);
+                              }}
+                              className="rounded dark:bg-black"
+                              src={`${PostImagesApi}/${ell}`}
+                              alt="img"
+                            />
+                          </SwiperSlide>
+                        );
+                      })}
+                    </Swiper>
+                  </div>
+                ) : (
+                  <img
+                    onDoubleClick={() => {
+                      PostLike(postById.postId);
+                    }}
+                    src={`${import.meta.env.VITE_APP_FILES_URL}${
+                      postById.images
+                    }`}
+                    className=" self-center items-center w-auto"
+                    alt=""
+                  />
+                )} */}
+
                 <img
+                  onDoubleClick={() => {
+                    PostLike(postById.postId);
+                  }}
                   src={`${import.meta.env.VITE_APP_FILES_URL}${
                     postById.images
                   }`}
-                  className=" h-[650px]"
+                  className=" self-center items-center w-auto"
                   alt=""
                 />
               </div>
 
-              <div className="my-5 mx-5">
+              <div className="py-3  px-3 bg-white">
                 <div className="top flex justify-between items-center">
                   <span className=" ">
                     {userId.map((e) => {
-                      console.log(e.id);
                       if (postById.userId == e.id) {
                         return (
                           <div className="flex items-center gap-4 ">
@@ -531,7 +594,69 @@ const Home = () => {
                     </IconButton>
                   </div>
                 </div>
-                <div>Comment</div>
+                <div className="overflow-auto h-[420px]   grid gap-5 px-10 py-10">
+                  {postComments.map((e) => {
+                    console.log(e);
+                    return (
+                      <>
+                        <div className="flex flex-wrap items-center">
+                          <div className="w-[45%]">
+                            {userId.map((el) => {
+                              if (e.userId == el.id) {
+                                return (
+                                  <div>
+                                    <Link
+                                      key={el.id}
+                                      className="w-[10%]"
+                                      to={"/profile"}
+                                    >
+                                      <div
+                                        className="flex items-center gap-2 "
+                                        onTouchMoveCapture={() =>
+                                          setProfileModal()
+                                        }
+                                      >
+                                        <img
+                                          src={`${
+                                            import.meta.env.VITE_APP_FILES_URL
+                                          }${el.avatar}`}
+                                          className="w-[14%] rounded-full"
+                                          alt=""
+                                        />
+                                        <p>
+                                          <Link
+                                            className="font-semibold"
+                                            to={"/home/profile"}
+                                          >{`${el.userName}`}</Link>
+                                          <span className="text-gray-400 ml-2">
+                                            • 1 дн.
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </Link>
+                                  </div>
+                                );
+                              }
+                              return;
+                            })}
+                          </div>
+                          <div>{e.comment}</div>
+
+                          <div
+                            className=""
+                            onClick={() => {
+                              setMore(true), setIdx(e.postCommentId);
+                            }}
+                          >
+                            <IconButton>
+                              <MoreHorizIcon />
+                            </IconButton>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
                 <div>
                   <div className="flex justify-between items-center">
                     <div>
@@ -628,7 +753,7 @@ const Home = () => {
                     <div>
                       <IconButton
                         onClick={() => {
-                          PostFavorites(postById.postId);
+                          PostFavorites(e.postFavorite);
                         }}
                       >
                         {postById?.postFavorite ? (
@@ -669,6 +794,51 @@ const Home = () => {
                       </IconButton>
                     </div>
                   </div>
+                  <div className="ml-2 flex">
+                    {userId.map((el) => {
+                      if (el.id == postById.userId) {
+                        return (
+                          <>
+                            <p className="font-semibold ">
+                              {postById.postLikeCount < 0
+                                ? postById.postLikeCount * -1
+                                : postById.postLikeCount}
+                              <span className="mx-[3px]"></span>
+                              отметок "Нравится"
+                            </p>
+                          </>
+                        );
+                      }
+                    })}
+                  </div>
+                </div>
+                <div className="border-t justify-between px-10 mt-5 pt-1 flex items-center ">
+                  <input
+                    type="text"
+                    value={comment}
+                    onChange={(event) => {
+                      setComment(event.target.value);
+                    }}
+                    className="outline-none w-[80%]   py-2.5 overflow-auto "
+                  />
+                  <button>
+                    {comment.trim().length == 0 ? (
+                      <div className="text-blue-100">Post</div>
+                    ) : (
+                      <div
+                        onClick={() => {
+                          AddComment({
+                            comment: comment,
+                            postId: postById.postId,
+                          });
+                          setComment("");
+                        }}
+                        className="text-blue-500"
+                      >
+                        Post
+                      </div>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>

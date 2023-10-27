@@ -41,6 +41,11 @@ const Messages = () => {
   const [user1, setuser1] = useState();
   const [open, setOpen] = React.useState(false);
   const [userId, setUserId] = useState();
+  const [text, setText] = useState("")
+  const [chatIdx,setChatIdx] = useState(null);
+
+
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -58,13 +63,24 @@ const Messages = () => {
   const handleClose2 = () => {
     setOpen2(false);
   };
+  const [open3, setOpen3] = React.useState(false);
+
+  const handleOpen3 = () => {
+    setOpen3(true);
+  };
+
+  const handleClose3 = () => {
+    setOpen3(false);
+  };
   // getUser
   async function getUser() {
     try {
       let { data } = await axiosRequest.get("User/get-users");
       setUser(data.data);
       console.log(data.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // getChat
@@ -93,23 +109,48 @@ const Messages = () => {
     }
   }
 
+
+
   // delete chat
-
-
-
-  async function deleteChat(){
-        try {
-            let {data} = await axiosRequest.delete(`Chat/delete-chat?chatId=${deleteId}`)
-            getChat()
-            // setChatID(null)
-            setModalChat(false)
-            setChatID(null)
-        } catch (error) {
+  // async function deleteChat(){
+  //       try {
+  //           let {data} = await axiosRequest.delete(`Chat/delete-chat?chatId=${deleteId}`)
+  //           getChat()
+  //           // setChatID(null)
+  //           setModalChat(false)
+  //           setChatID(null)
+  //       } catch (error) {
             
+  //       }
+  //   }
+
+
+
+
+  // sendMessage
+  
+  async function sendMessage() { 
+    if (text.trim().length >0) {
+      try {
+        console.log(chatIdx);
+        console.log(text);
+        const obj = {
+          "chatId": chatIdx,
+          "messageText":text
         }
+        const { data } = await axiosRequest.put(`Chat/send-message`, obj);
+        getMessage(chatidd)
+        // console.log(dtaa.data);
+        setText("")
+      } catch (error) {
+        
+      }
     }
-
-
+    else {
+      getMessage(chatidd);
+      alert("Please enter your message")
+    }
+  }
 
   // postChat
   async function postChat(id) {
@@ -124,6 +165,9 @@ const Messages = () => {
       setChat(data.data);
       setSearchText("");
       getMessage(chatidd);
+      setChatIDD(data?.data)
+      setChatIdx(data?.data)
+      console.log(chatIdx);
     } catch (error) {
       console.log(error);
     }
@@ -139,7 +183,7 @@ const Messages = () => {
   return (
     <div className="flex justify-end">
       <div className="w-[100%] flex justify-center">
-        <div className="lg:w-[36%] border-[1px]">
+        <div className="lg:w-[38%] border-[1px]">
           <div className="sticky z-[1] ">
             <div className="flex items-center justify-between lg:px-[30px] py-[17px] pt-[32px]">
               <h1 className="text-[24px] font-bold hidden xl:block">
@@ -330,7 +374,7 @@ const Messages = () => {
               <h1 className="text-[#969696] font-medium">Запросы</h1>
             </div>
           </div>
-          <div className="mt-[10px] h-[85vh]" style={{ overflow: "auto" }}>
+          <div className="mt-[10px] h-[82vh]" style={{ overflow: "auto" }}>
             {user.map((e) => {
               return (
                 <div
@@ -343,12 +387,14 @@ const Messages = () => {
                 >
                   {e.avatar == null || e.avatar == "" ? (
                     <img
+                      onClick={() => handleOpen3}
                       className="w-[80px] h-[80px]"
                       src={imageee}
                       alt={"profile"}
                     />
                   ) : (
                     <img
+                      onClick={() => handleOpen3}
                       className="w-[80px] h-[80px] rounded-[50%]"
                       src={`${import.meta.env.VITE_APP_FILES_URL}${e?.avatar}`}
                       alt={"profile"}
@@ -365,24 +411,59 @@ const Messages = () => {
           </div>
         </div>
         {modal ? (
-          <div className="w-[100%] md:w-[70%] lg:w-[69%] ">
+          <div className="w-[100%] md:w-[70%] lg:w-[62%] ">
             <div className="flex items-center border-[1px] justify-between px-[20px] sticky z-[1] ">
-              <div className=" py-[20px] flex items-center gap-[15px] text-[20px] font-semibold">
-                {userii.avatar == null || userii.avatar == "" ? (
-                  <img
-                    className="m-auto rounded-[50%] my-[20px] w-[80px] h-[80px]"
-                    src={imageee}
-                    alt={"profile"}
-                  />
-                ) : (
-                  <img
-                    className="m-auto my-[20px] w-[80px] h-[80px] rounded-[50%]"
-                    src={`${import.meta.env.VITE_APP_FILES_URL}${
-                      userii?.avatar
-                    }`}
-                    alt={"profile"}
-                  />
-                )}
+              <div className="flex items-center gap-[15px] text-[20px] font-semibold">
+                <div className="bg-[gray]">
+                  <Modal
+                    open={open3}
+                    onClose={handleClose3}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                    sx={{ marginLeft: "auto" }}
+                  >
+                    <Box
+                      sx={{
+                        ...style,
+                        width: "30%",
+                        backgroundColor: "#ffffff",
+                      }}
+                    >
+                      {userii.avatar == null || userii.avatar == "" ? (
+                        <img
+                          className="w-[80%] h-[40%] bg-cover object-cover m-auto py-[40px]"
+                          src={imageee}
+                          alt={"profile"}
+                        />
+                      ) : (
+                        <img
+                          className="w-[80%] h-[40%] bg-cover object-cover m-auto py-[40px]"
+                          src={`${import.meta.env.VITE_APP_FILES_URL}${
+                            userii?.avatar
+                          }`}
+                          alt={"profile"}
+                        />
+                      )}
+                    </Box>
+                  </Modal>
+                </div>
+                <div className="" onClick={setOpen3}>
+                  {userii.avatar == null || userii.avatar == "" ? (
+                    <img
+                      className="m-auto rounded-[50%] my-[20px] w-[80px] h-[80px] object-cover"
+                      src={imageee}
+                      alt={"profile"}
+                    />
+                  ) : (
+                    <img
+                      className="m-auto my-[20px] w-[80px] h-[80px] rounded-[50%] object-cover"
+                      src={`${import.meta.env.VITE_APP_FILES_URL}${
+                        userii?.avatar
+                      }`}
+                      alt={"profile"}
+                    />
+                  )}
+                </div>
                 <h1 className="lg:flex gap-[10px] hidden lg:block">
                   {userii.userName}
                 </h1>
@@ -409,7 +490,7 @@ const Messages = () => {
                 <TemporaryDrawer />
               </div>
             </div>
-            <div className=" h-[85vh]" style={{ overflow: "auto" }}>
+            <div className=" h-[80vh]" style={{ overflow: "auto" }}>
               <div className="text-center py-[50px]">
                 {userii.avatar == null || userii.avatar == "" ? (
                   <img
@@ -419,7 +500,7 @@ const Messages = () => {
                   />
                 ) : (
                   <img
-                    className="m-auto my-[20px] w-[80px] h-[80px] rounded-[50%]"
+                    className="m-auto my-[20px] w-[80px] h-[80px] rounded-[50%] object-cover"
                     src={`${import.meta.env.VITE_APP_FILES_URL}${
                       userii?.avatar
                     }`}
@@ -433,41 +514,71 @@ const Messages = () => {
                     className="px-[30px] py-[5px] rounded-[8px] bg-[#dedede] my-[14px] font-medium hover:bg-[#c5c5c5]"
                     onClick={handleClickOpen}
                   >
-                    <Link to="/profile">Смотреть профиль</Link>
+                    <Link to="/home/profile">Смотреть профиль</Link>
                   </button>
-                  {
-                    message.map((elem) => {
-                      return (
-                        <div className="">
-                          <h1>{elem.messageText}</h1>
-                        </div>
-                      )
-                    })
-                  }
-                </div>
-                <div className="flex gap-[20px] items-center justify-between w-[95%] m-auto border-[2px] px-[25px] py-[10px] rounded-[20px] mt-[250px]">
-                  <div className="flex items-center gap-[20px] w-[90%]">
-                    <IconButton>
-                      <svg
-                        aria-label="Выбрать смайлик"
-                        class="x1lliihq x1n2onr6"
-                        color="rgb(0, 0, 0)"
-                        fill="rgb(0, 0, 0)"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <title>Выбрать смайлик</title>
-                        <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
-                      </svg>
-                    </IconButton>
-                    <input
-                      className="  text-[20px] outline-none w-[100%]"
-                      type="text"
-                      placeholder="Напишите сообщение....."
-                    />
+                  <div className="">
+                    { userId == myId ? (
+                      <div>
+                        {message.map((elem) => {
+                          return (
+                            <div className="px-[50px] text-end">
+                              <span className="text-[25px] font-normal my-[10px] bg-[#cbcbcb] px-[30px] rounded-[13px]">
+                                {elem.messageText}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div>
+                        {message.map((elem) => {
+                          return (
+                            <div className="px-[50px] text-start">
+                              <span className="text-[25px] font-normal my-[10px] bg-[#cbcbcb] px-[30px] rounded-[13px]">
+                                {elem.messageText}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
+                </div>
+              </div>
+              <div className="flex gap-[20px] items-center justify-between w-[95%] m-auto border-[2px] px-[25px] py-[10px] rounded-[20px] mt-[200px]">
+                <div className="flex items-center gap-[20px] w-[90%]">
+                  <IconButton>
+                    <svg
+                      aria-label="Выбрать смайлик"
+                      class="x1lliihq x1n2onr6"
+                      color="rgb(0, 0, 0)"
+                      fill="rgb(0, 0, 0)"
+                      height="24"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="24"
+                    >
+                      <title>Выбрать смайлик</title>
+                      <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
+                    </svg>
+                  </IconButton>
+                  <input
+                    className="  text-[20px] outline-none w-[100%]"
+                    type="text"
+                    value={text}
+                    onChange={(event) => setText(event.target.value)}
+                    placeholder="Напишите сообщение....."
+                  />
+                </div>
+                {text ? (
+                  <button
+                    onClick={() => sendMessage()}
+                    type=""
+                    className="w-[15%] text-[14px] text-[#0095fe] hover:text-[#737373] font-bold"
+                  >
+                    Отправить
+                  </button>
+                ) : (
                   <div className="flex gap-[20px]">
                     <IconButton>
                       <svg
@@ -569,18 +680,44 @@ const Messages = () => {
                       </svg>
                     </IconButton>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="w-[100%] md:w-[70%] lg:w-[69%] ">
-            <h1 className="text-[100px] text-[red] text-center">Hello</h1>
+          <div className="w-[100%] md:w-[70%] lg:w-[69%] justify-center mt-[250px]">
+            <div className="m-auto flex justify-center pb-[10px]">
+              <svg
+                aria-label=""
+                class="x1lliihq x1n2onr6 x5n08af"
+                fill="currentColor"
+                height="96"
+                role="img"
+                viewBox="0 0 96 96"
+                width="96"
+              >
+                <title></title>
+                <path d="M48 0C21.532 0 0 21.533 0 48s21.532 48 48 48 48-21.532 48-48S74.468 0 48 0Zm0 94C22.636 94 2 73.364 2 48S22.636 2 48 2s46 20.636 46 46-20.636 46-46 46Zm12.227-53.284-7.257 5.507c-.49.37-1.166.375-1.661.005l-5.373-4.031a3.453 3.453 0 0 0-4.989.921l-6.756 10.718c-.653 1.027.615 2.189 1.582 1.453l7.257-5.507a1.382 1.382 0 0 1 1.661-.005l5.373 4.031a3.453 3.453 0 0 0 4.989-.92l6.756-10.719c.653-1.027-.615-2.189-1.582-1.453ZM48 25c-12.958 0-23 9.492-23 22.31 0 6.706 2.749 12.5 7.224 16.503.375.338.602.806.62 1.31l.125 4.091a1.845 1.845 0 0 0 2.582 1.629l4.563-2.013a1.844 1.844 0 0 1 1.227-.093c2.096.579 4.331.884 6.659.884 12.958 0 23-9.491 23-22.31S60.958 25 48 25Zm0 42.621c-2.114 0-4.175-.273-6.133-.813a3.834 3.834 0 0 0-2.56.192l-4.346 1.917-.118-3.867a3.833 3.833 0 0 0-1.286-2.727C29.33 58.54 27 53.209 27 47.31 27 35.73 36.028 27 48 27s21 8.73 21 20.31-9.028 20.31-21 20.31Z"></path>
+              </svg>
+            </div>
+            <div className="m-auto text-center">
+              <h1 className="text-[26px] font-medium py-[13px]">
+                Ваши сообщения
+              </h1>
+              <h1 className="pb-[12px]">
+                Отправляйте личные фото и сообщения другу или группе
+              </h1>
+              <button
+                onClick={handleOpen2}
+                className="bg-[#0095F6] hover:bg-[#1b7dbe] px-[30px] py-[7px] text-[19px] font-medium text-[white] rounded-[12px]"
+              >
+                Отправить сообщение
+              </button>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 };
-
 export default Messages;

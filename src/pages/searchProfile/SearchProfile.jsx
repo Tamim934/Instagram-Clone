@@ -1,8 +1,11 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 
 const SearchProfile = () => {
+  const {id} =useParams()
+  console.log(id)
   return (
-    <div>SearchProfile</div>
+    <div>{`${id}`}</div>
   )
 }
 

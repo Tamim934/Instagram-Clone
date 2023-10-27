@@ -19,7 +19,6 @@
 	padding-top: 5px;
 }
 
-
 .input-file span:hover{
     background-color: #1877F2;
 }
@@ -33,6 +32,16 @@
 	height: 0;
 }
 
+#buttonMUI:hover {
+  background-color: #1877F2 !important;
+}
+
+.searchModal{
+  box-shadow: 1px 1px 12px gray;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
 #bottom{
     border-bottom: 10px solid rgb(220, 220, 220) ;
 }
@@ -40,6 +49,11 @@
 .hidden {
     display: none;
   }
+
+#border{
+  border: 1px solid gray;
+}
+
 /* editprofilecss   */
 /* .container { 
    display: grid;
