@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { axiosRequest, getToken } from '../utilities/axiosRequest';
 
 const CommentInput = ({ postId }) => {
+  console.log(postId)
   const [comment, setComment] = useState('');
 
   const handleCommentChange = (event) => {
@@ -15,12 +16,15 @@ const CommentInput = ({ postId }) => {
  const userId = getToken()?.sid;
   const handleCommentSubmit = async () => {
   
-    // Handle the comment submission here
+   
     try {
-      const {data} = await axiosRequest.post('Post/add_comment', {
-        comment,
-        postId,
+      const {data} = await axiosRequest.post(`Post/add_comment`, {
+       
+        "comment":comment,
+        "postId":postId
+    
       });
+      
 console.log(data)
 
      

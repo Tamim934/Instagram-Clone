@@ -3,6 +3,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useState } from "react";
 import Posts from "../../components/PostsUsers";
 import { axiosRequest, getToken } from "../../utilities/axiosRequest";
+import axios from "axios";
+import { use } from "i18next";
+import { Update } from "@mui/icons-material";
 
 const Profile = () => {
   const maxLength = 150;
@@ -11,110 +14,120 @@ const Profile = () => {
   );
 
   const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setModal(false);
-    }, 3000);
-  };
+ 
+  
 
 
-const defaultPic =
-  "/src/assets/imagesuserprofile/gep-worldwide-computer-network-building-youth-nigeria-others-829f6a97f991a96566e6ac5910746622.png";
-const [profilePic, setProfilePic] = useState(
-  localStorage.getItem("profilePic") || defaultPic
-);
 
-const handleChangeProfilePicture = async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const newPic = reader.result;
-      setProfilePic(newPic);
-      localStorage.setItem("profilePic", newPic);
-
-      // FormData object
-      let formData = new FormData();
-      formData.append("profilePic", file);
-
-      try {
-        const response = await axiosRequest.post(
-          "/UserProfile/update-UserProfile",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error updating profile picture:", error);
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-};
+  
 
 
-const [modal, setModal] = useState(false);
+ const [modal, setModal] = useState(false);
 
-const [activeTab, setActiveTab] = useState("posts");
-const [user, setUser] = useState("");
-const InstagramTabs = () => {
+ const [activeTab, setActiveTab] = useState("posts");
+ const [user, setUser] = useState("");
+ const InstagramTabs = () => {
   const [activeTab, setActiveTab] = useState("posts");
-};
+ };
 
-const userId = getToken()?.sid;
+ const userId = getToken()?.sid;
 
-const getProfile = async () => {
-  try {
+    const getProfile = async () => {
+   try {
     const { data } = await axiosRequest.get(
       `UserProfile/get-UserProfile-by-id?id=${userId}`
     );
     setUser(data?.data);
-    console.log(setUser)
-    console.log(data);
-    console.log(user);
-    console.log(data.data.firstName);
-    console.log(data.data.about);
+    setGender(data?.data.gender);
+    setFirstName(data?.data.firstName);
+    setAbout(data?.data.about);
+    
   } catch (error) {
     console.log(error);
   }
-};
-const [Userpost,setuserpost]=useState()
-const [Userfollowers,setUserfollowers]=useState()
-const [Userfollowing,setUserfollowing]=useState()
-const getFollowers = async () => {
+   };
+ const [Userpost,setuserpost]=useState()
+ const [Userfollowers,setUserfollowers]=useState()
+ const [Userfollowing,setUserfollowing]=useState()
+ const getFollowers = async () => {
   try {
     const { data } = await axiosRequest.get(`/UserProfile/CounterProfile`);
 
-    console.log(data);
+    // console.log(data);
  setuserpost(data.data.post)
  setUserfollowers(data.data.follower)
  setUserfollowing(data.data.following)
   } catch (error) {
     console.log(error);
   }
-};
-//update user profile
-const Updateprofile = async () => {
-  try {
-    const { data } = await axiosRequest.get(`/UserProfile/update-UserProfile`);
+ };
 
-    console.log(data);
-   
-  } catch (error) {
-    console.log(error);
-    console.log(error)
+// update user profile
+//  const [image,setimage]=useState()
+//  const [gender,setgender]=useState('')
+//  const [ProfileImage,setProfileImage]=useState()
+//  const [FirstName,setFirstName]=useState('')
+  const [image, setImage] = useState("");
+  const [dateUpdated, setDateUpdated] = useState("");
+  const [gender, setGender] = useState(user.gender);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+ 
+  const [locationId, setLocationId] = useState(1);
+  const [dob, setDob] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [about, setAbout] = useState(user.about);
+  
+
+ 
+
+
+
+  const UpdateProfile = async (profileNew) => {
+    try {
+      
+      const { data } = await axiosRequest.put(`UserProfile/update-UserProfile`, profileNew);
+      console.log(data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+ 
+  const handleSubmit = () => {
+    setIsLoading(true);
+
+    let profileNew = {
+      "image": image,
+      "dateUpdated": "",
+      "gender": gender,
+      "firstName": firstName,
+      "lastName": lastName,
+      "locationId": locationId,
+      "dob": "",
+      "occupation": occupation,
+      "about": about
+    }
+
+     UpdateProfile(profileNew);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setModal(false);
+    }, 3000);
   }
-};
+
+
+
+
+
+
 useEffect(() => {
+//  Updateprofile()
   getProfile();
   getFollowers();
- Updateprofile()
+
+
 }, []);
 return(
 <div className=" dark:bg-black dark:text-white">
@@ -199,7 +212,7 @@ return(
         </div>
       </div>
       <div className="flex ml-[50px] mt-[12px]  max600:ml-[-65px]">
-        <h1 className=" font-medium text-[15px]">{user.fristname}</h1>
+        <h1 className=" font-medium text-[15px]">{user.lastName}</h1>
       </div>
       <div className="flex ml-[50px] mt-[5px] max600:ml-[-65px]">
         <h1 className="w-[300px] text-[16px] max600:w-[300px]">{user.about}</h1>
@@ -466,30 +479,33 @@ return(
             <div className="flex items-center mt-[100px] gap-[30px] ml-[100px]">
               <div className="w-10 h-10 max5:w-20 max5:h-20 relative flex rounded-full overflow-hidden">
                 <img
-                  src={user.image}
+                  src={`${import.meta.env.VITE_APP_FILES_URL}${user?.image}`}
                   alt="Profile"
                   className="absolute w-full h-full object-cover"
                 />
               </div>
               <div>
-                <form className="">
-                  <h1>{user.fristname}</h1>
-                  <label
-                    htmlFor="profilePic"
-                    className="text-[14px] font-bold dark:text-black"
-                    style={{ cursor: "pointer", color: "#42bae6" }}
-                  >
-                    Change Profile Picture
-                  </label>
-                  <input
-                    type="file"
-                    id="profilePic"
-                    name="profilePic"
-                    
-                    style={{ display: "none" }}
-                    onChange={handleChangeProfilePicture}
-                  />
-                </form>
+              <form className="">
+  <h1>{user.firstName}</h1>
+  <label
+    htmlFor="profilePic"
+    className="text-[14px] font-bold dark:text-black"
+    style={{ cursor: "pointer", color: "#42bae6" }}
+  >
+    Change Profile Picture
+  </label>
+  <input
+    type="file"
+    id="profilePic"
+    name="profilePic"
+    style={{ display: "none" }}
+    onChange={async (e) => {
+      setImage(e.target.files[0]);
+      await UpdateProfile();
+    }}
+   
+  />
+  </form>
               </div>
             </div>
 
@@ -497,12 +513,14 @@ return(
               <div className="flex gap-[60px]">
                 <h1 className="text-[16px] font-medium">Name</h1>
                 <input
-                  type="text"
-                  placeholder="Change Your Name"
-                  className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px]"
-                  // will set alue
-                  //will set onchnage
-                />
+    type="text"
+    placeholder="Change Your Name"
+    className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] dark:text-black"
+   
+    value={firstName}
+    onChange={(e) => setFirstName(e.target.value)}
+  
+  />
               </div>
               <div className="flex gap-[40px] mt-[20px]">
                 <h1 className="text-[16px] font-medium">websites</h1>
@@ -510,6 +528,7 @@ return(
                   type="text"
                   placeholder="Website"
                   className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] bg-[#e8e6e6]"
+                  
                 />
               </div>
               <h1 className="text-[12px] ml-[100px] text-gray-600 dark:text-white">
@@ -520,14 +539,12 @@ return(
               <div className="flex gap-[50px] ml-[30px] mt-[20px]">
                 <h1 className="text-[16px] font-medium">bio</h1>
                 <textarea
-                  placeholder="bio"
-                  className="pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px]"
-                  // bio value
-                  value={user.about}
-                  onChange={(e)=>{e.target.value}// done will change to real bio
-                }
-
-                />
+    placeholder="bio"
+    className="pl-[10px] pt-[5px] rounded-sm border outline-none w-[350px] dark:text-black"
+    value={about}
+    onChange={(e) => setAbout(e.target.value)}
+  
+  />
                 <p className="text-[gray]">
                   {userBio.length}/{maxLength}
                 </p>
@@ -536,11 +553,13 @@ return(
               <div className="flex gap-[50px] mt-[20px] ">
                 <h1 className="text-[16px] font-medium">Gender</h1>
                 <input
-                  type="text"
-                  placeholder="Prefer not to say"
-                  value={user.gender}
-                  className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] text-black"
-                />
+    type="text"
+    placeholder="Prefer not to say"
+    value={gender}
+    onChange={(e) => setGender(e.target.value)}
+    className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] text-black"
+ 
+  />
               </div>
               <div className="flex gap-[20px] mt-[20px] ">
                 <h1 className=" font-medium">
