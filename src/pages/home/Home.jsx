@@ -101,7 +101,7 @@ const Home = () => {
   return (
     <div className="flex  dark:text-white  w-[100%]  justify-center lg:justify-between">
       <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[90%] ">
-        <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10 ">
+        <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10">
           <Swiper
             // spaceBetween={30}
             breakpoints={{

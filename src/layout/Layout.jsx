@@ -15,6 +15,11 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { handleChangeSearch } from '../reducers/instagram'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import Switcher from '../components/Switcher'
 
 const Layout = () => {
 
@@ -38,16 +43,27 @@ const Layout = () => {
   useEffect(() => {
     searchUsers()
   }, [])
-
+  
   // search ↑
+  
+  // create ↓
 
-  // newPost ↓
+  const [open, setOpen] = React.useState(false);
 
+  const openPostModal = () => {
+    setOpen(true);
+  };
+
+  const closePostModal = () => {
+    setOpen(false);
+  };
+  
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [posts, setPosts] = useState([])
+  const [show, setShow] = useState([])
   const navigate = useNavigate()
-
+  
   function myImage(event){
     let arrImg = []
     for (let i=0; i<event.target.files.length; i++){
@@ -78,40 +94,66 @@ const Layout = () => {
     }
   }
 
-  const [open, setOpen] = React.useState(false);
-
-  const openPostModal = () => {
-    setOpen(true);
+  const handlePosts = async (files) => {
+    let arrImg = []
+    for (let i=0; i<files.length; i++){
+      let file = await FileToBase64(files[i]) ;
+      arrImg.push({
+        id:Date.now(),
+        name:file
+      })
+    }
+    setShow(arrImg)
   };
+  
+  // create ↑
 
-  const closePostModal = () => {
-    setOpen(false);
-  };
-
-  const [postImg, setPostImg] = useState(null)
-
-  const handlePostImage = async (event) => {
-    let file = await FileToBase64(event.target.files[0]);
-    setPostImg(file);
-  };
-
-  // newPost ↑
+  // location ↓
 
   const { pathname } = useLocation();
 
-  const { t, i18n } = useTranslation();
+  // location ↑
 
-  const changeLanguage = (language) => {
-    i18n.changeLanguage(language);
-  };
-
-  const active = localStorage.getItem("i18nextLng");
+  // animation ↓
 
   useEffect(() => {
     AOS.init()
   }, [])
 
-  const [icon, setIcon] = useState(false)
+  // animation ↑
+
+  // translation ↓
+
+  const {t, i18n} = useTranslation()
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language)
+  }
+
+  const active  = localStorage.getItem("i18nextLng")
+
+  // translation ↑
+
+  // darkMode ↓
+
+  const [theme, setTheme] = useState(localStorage.theme)
+  const colorTheme = theme === 'dark' ? 'light' : 'dark'
+
+  useEffect(() => {
+    const root = window.document.documentElement
+    root.classList.remove(colorTheme)
+    root.classList.add(theme)
+
+    localStorage.setItem('theme', theme)
+}, [theme, colorTheme])
+
+   // darkMode ↑
+
+  const pagination = {
+    clickable: true,
+    renderBullet: function (index, className) {
+      return '<span class="' + className + '">' + (index + 1) + '</span>';
+    }}
 
   return (
     <div>
@@ -171,7 +213,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Главная" class="x1lliihq x1n2onr6 x5n08af" color="rgb(255, 255, 255)" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Главная</title><path d="M22 23h-6.001a1 1 0 0 1-1-1v-5.455a2.997 2.997 0 1 0-5.993 0V22a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V11.543a1.002 1.002 0 0 1 .31-.724l10-9.543a1.001 1.001 0 0 1 1.38 0l10 9.543a1.002 1.002 0 0 1 .31.724V22a1 1 0 0 1-1 1Z"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>Главная</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>{t("layout.home")}</span>
                 </div>
                 :
                 <div className='flex items-center gap-[16px]'>
@@ -181,7 +223,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Главная" className='fixed hover:w-[25px] hover:h-[25px]' class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Главная</title><path d="M9.005 16.545a2.997 2.997 0 0 1 2.997-2.997A2.997 2.997 0 0 1 15 16.545V22h7V11.543L12 2 2 11.543V22h7.005Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Главная</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.home")}</span>
                 </div>
                 }
                 </div>
@@ -200,7 +242,7 @@ const Layout = () => {
                 {searchModal ? <svg aria-label="Поисковый запрос" class="x1lliihq x1n2onr6 x5n08af" color="rgb(255, 255, 255)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Поисковый запрос</title><path d="M18.5 10.5a8 8 0 1 1-8-8 8 8 0 0 1 8 8Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" x1="16.511" x2="21.643" y1="16.511" y2="21.643"></line></svg>
                 : <svg aria-label="Поисковый запрос" class="x1lliihq x1n2onr6 x5n08af" color="rgb(255, 255, 255)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Поисковый запрос</title><path d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="16.511" x2="22" y1="16.511" y2="22"></line></svg>}
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Поисковый запрос</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.search")}</span>
                 </div>
                 
                 </div>
@@ -218,7 +260,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Интересное" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Интересное</title><path d="m13.173 13.164 1.491-3.829-3.83 1.49ZM12.001.5a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12.001.5Zm5.35 7.443-2.478 6.369a1 1 0 0 1-.57.569l-6.36 2.47a1 1 0 0 1-1.294-1.294l2.48-6.369a1 1 0 0 1 .57-.569l6.359-2.47a1 1 0 0 1 1.294 1.294Z"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>Интересное</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>{t("layout.explore")}</span>
                 </div>
                 :
                 <div className='flex items-center gap-[16px]'>
@@ -228,7 +270,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Интересное" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Интересное</title><polygon fill="none" points="13.941 13.953 7.581 16.424 10.06 10.056 16.42 7.585 13.941 13.953" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon><polygon fill-rule="evenodd" points="10.06 10.056 13.949 13.945 7.581 16.424 10.06 10.056"></polygon><circle cx="12.001" cy="12.005" fill="none" r="10.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Интересное</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.explore")}</span>
                 </div>
                 }
                 </div>
@@ -276,7 +318,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Messenger" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Messenger</title><path d="M12.003 1.131a10.487 10.487 0 0 0-10.87 10.57 10.194 10.194 0 0 0 3.412 7.771l.054 1.78a1.67 1.67 0 0 0 2.342 1.476l1.935-.872a11.767 11.767 0 0 0 3.127.416 10.488 10.488 0 0 0 10.87-10.57 10.487 10.487 0 0 0-10.87-10.57Zm5.786 9.001-2.566 3.983a1.577 1.577 0 0 1-2.278.42l-2.452-1.84a.63.63 0 0 0-.759.002l-2.556 2.049a.659.659 0 0 1-.96-.874L8.783 9.89a1.576 1.576 0 0 1 2.277-.42l2.453 1.84a.63.63 0 0 0 .758-.003l2.556-2.05a.659.659 0 0 1 .961.874Z"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>Сообщения</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>{t("layout.messages")}</span>
                 </div>
                 :
                 <div className='flex items-center gap-[16px]'>
@@ -286,7 +328,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Messenger" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Messenger</title><path d="M12.003 2.001a9.705 9.705 0 1 1 0 19.4 10.876 10.876 0 0 1-2.895-.384.798.798 0 0 0-.533.04l-1.984.876a.801.801 0 0 1-1.123-.708l-.054-1.78a.806.806 0 0 0-.27-.569 9.49 9.49 0 0 1-3.14-7.175 9.65 9.65 0 0 1 10-9.7Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.739"></path><path d="M17.79 10.132a.659.659 0 0 0-.962-.873l-2.556 2.05a.63.63 0 0 1-.758.002L11.06 9.47a1.576 1.576 0 0 0-2.277.42l-2.567 3.98a.659.659 0 0 0 .961.875l2.556-2.049a.63.63 0 0 1 .759-.002l2.452 1.84a1.576 1.576 0 0 0 2.278-.42Z" fill-rule="evenodd"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Сообщения</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.messages")}</span>
                 </div>
                 }
                 </div>
@@ -299,7 +341,7 @@ const Layout = () => {
                 pathname === "" ?
                 <div className='flex items-center gap-[16px]'>
                 <svg aria-label="Уведомления" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Уведомления</title><path d="M17.075 1.987a5.852 5.852 0 0 0-5.07 2.66l-.008.012-.01-.014a5.878 5.878 0 0 0-5.062-2.658A6.719 6.719 0 0 0 .5 8.952c0 3.514 2.581 5.757 5.077 7.927.302.262.607.527.91.797l1.089.973c2.112 1.89 3.149 2.813 3.642 3.133a1.438 1.438 0 0 0 1.564 0c.472-.306 1.334-1.07 3.755-3.234l.978-.874c.314-.28.631-.555.945-.827 2.478-2.15 5.04-4.372 5.04-7.895a6.719 6.719 0 0 0-6.425-6.965Z"></path></svg>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>Уведомления</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>{t("layout.notifications")}</span>
                 </div>
                 :
                 <div className='flex items-center gap-[16px]'>
@@ -309,7 +351,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Уведомления" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Уведомления</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Уведомления</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.notifications")}</span>
                 </div>
                 }
                 </div>
@@ -325,7 +367,7 @@ const Layout = () => {
                 <div className='hidden dark:block'>
                 <svg aria-label="Новая публикация" className='hover:w-[25px] hover:h-[25px]' class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Новая публикация</title><path d="M2 12v3.45c0 2.849.698 4.005 1.606 4.944.94.909 2.098 1.608 4.946 1.608h6.896c2.848 0 4.006-.7 4.946-1.608C21.302 19.455 22 18.3 22 15.45V8.552c0-2.849-.698-4.006-1.606-4.945C19.454 2.7 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.547 2 5.703 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="6.545" x2="17.455" y1="12.001" y2="12.001"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12.003" x2="12.003" y1="6.545" y2="17.455"></line></svg>
                 </div>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Создать</span>          
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.create")}</span>          
                 </div>
 
                 </div>
@@ -338,12 +380,12 @@ const Layout = () => {
                 pathname === "/home/profile" ?
                 <div className='flex items-center gap-[16px]'>
                 <img src={userimage} alt="" className='border-[2px] border-black dark:border-white w-[26px] h-[26px] rounded-[50%] hover:w-[27px] hover:h-[27px] max-w-max'/>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>Профиль</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] font-bold hidden xl:block'>{t("layout.profile")}</span>
                 </div>
                 :
                 <div className='flex items-center gap-[16px]'>
                 <img src={userimage} alt="" className='w-[26px] h-[26px] rounded-[50%] hover:w-[27px] hover:h-[27px] max-w-max'/>
-                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Профиль</span>
+                <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.profile")}</span>
                 </div>
                 }
                 </div>
@@ -373,7 +415,7 @@ const Layout = () => {
             </a>
 
             <div style={searchModal ? {width:"48px"} : null} className='w-[48px] xl:w-[220px] h-[56px] pt-[4px]'>
-              <CustomizedMenus/>          
+              <CustomizedMenus/>
             </div>
 
         </div>
@@ -383,7 +425,7 @@ const Layout = () => {
           <div className='searchModal absolute bottom-[0] left-[72px] z-50  w-[397px] h-[100vh] bg-white dark:bg-black overflow-y-auto' data-aos="fade-right">
             <div className='pl-[16.33px]'>
               <br />
-              <span className='text-black dark:text-white text-[24px] font-medium'>Поисковый запрос</span>
+              <span className='text-black dark:text-white text-[24px] font-medium'>{t("layout.search")}</span>
               <br /><br />
               <input value={search} onChange={(event) => setSearch(event.target.value)}  type="search" placeholder='Поиск' className='bg-[#EFEFEF] dark:bg-[#262626] text-[#737373] dark:text-[#A8A8A8] w-[364.33px] h-[40px] rounded-[8px] py-[3px] px-[16px] outline-none' />
             </div>
@@ -393,7 +435,7 @@ const Layout = () => {
             {
             search.length <= 0 &&
             <div className='pl-[16.33px]'>
-              <span className='text-black dark:text-white text-[16px] font-medium'>Недавнее</span>
+              <span className='text-black dark:text-white text-[16px] font-medium'>{t("layout.recent")}</span>
             </div>
             }         
             <div>
@@ -403,7 +445,7 @@ const Layout = () => {
                     {users?.filter((e) => e?.userName?.toLowerCase()?.includes(search?.toLowerCase()))
                     .map((e) => {
                       return (
-                        <div key={e.id} onClick={() => navigate(`searchprofile/${e.id}`)} className='flex items-center gap-[12px] py-[8px] px-[24px]'>
+                        <div key={e.id} onClick={() => {navigate(`searchprofile/${e.id}`), dispatch(handleChangeSearch(false))}} className='flex items-center gap-[12px] py-[8px] px-[24px] cursor-pointer'>
                           {e.avatar == null || e.avatar == "" ? (
                             <img src={userimage} alt="" className='w-[44px] h-[44px] rounded-[50%]' />
                           ) : (
@@ -419,8 +461,8 @@ const Layout = () => {
             </div>
             {
             search.length <= 0 &&
-            <div className='flex justify-center'>
-              <span className='text-[#737373] dark:text-[#A8A8A8] text-[14px]'>Нет недавних запросов.</span>
+            <div className='flex justify-center mt-72'>
+              <span className='text-[#737373] dark:text-[#A8A8A8] text-[14px] font-medium'>{t("layout.norecentsearches")}</span>
             </div>
             }
           </div>
@@ -436,21 +478,33 @@ const Layout = () => {
       >
         <Box sx={{width:"661px", height:"720px"}}>
         <DialogTitle id="alert-dialog-title" sx={{ textAlign: "center", fontSize: "16px", fontWeight: "700"}}>
-          {"Создание публикации"}
+          {t("layout.createnewpost")}
         </DialogTitle>
         <hr />
         <DialogContent>
           <div className='flex flex-col justify-center items-center gap-[24px] mt-48'>
             <svg aria-label="Значок, соответствующий медиафайлам, например изображениям или видео" class="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="77" role="img" viewBox="0 0 97.6 77.3" width="96"><title>Значок, соответствующий медиафайлам, например изображениям или видео</title><path d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z" fill="currentColor"></path><path d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z" fill="currentColor"></path><path d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z" fill="currentColor"></path></svg>
-            <span className='text-[20px]'>Перетащите сюда фото и видео</span>
+            <span className='text-[20px]'>{t("layout.dragphotosandvideoshere")}</span>
           </div>
-          <img src={postImg} alt="" />
+        <Swiper
+          pagination={pagination}
+          modules={[Pagination]}
+          className="mySwiper"
+        >
+
+          {show?.map((e) => {
+            return (
+              <SwiperSlide><img src={e.name} alt="" /></SwiperSlide>
+            )
+          })}
+
+        </Swiper>
         </DialogContent>
         <Box sx={{display:"flex", flexDirection:"column", justifyContent:"center"}}>
           <form method="post" enctype="multipart/form-data" className='m-auto'>
             <label class="input-file">
-              <input type="file" name="file" multiple={true} onChange={(event) => {myImage(event), handlePostImage(event), setPostImg(null)}}/>
-              <span className='text-white font-medium'>Выбрать на компьютере</span>
+              <input type="file" name="file" multiple={true} onChange={(event) => {myImage(event), handlePosts(event.target.files)}}/>
+              <span className='text-white font-medium'>{t("layout.selectfromcomputer")}</span>
             </label>
           </form>
           <br />
@@ -458,14 +512,14 @@ const Layout = () => {
           <br />
           <TextField placeholder="Content" id="outlined-basic" label="Content" variant="outlined" size="small" sx={{margin:"auto", width:"268px"}} value={content} onChange={(event) => setContent(event.target.value)}/>
           <br />
-          <Button onClick={() => {addPost(), closePostModal()}} variant='contained' sx={{margin:"auto", width:"193.82px", borderRadius:"8px", backgroundColor:"#0095F6"}} id="buttonMUI">Post</Button>
+          <Button onClick={() => {addPost(), closePostModal()}} variant='contained' sx={{margin:"auto", width:"193.82px", borderRadius:"8px", backgroundColor:"#0095F6", textTransform: "none"}} id="buttonMUI">{t("layout.post")}</Button>
           <br />
         </Box>  
         </Box>
       </Dialog>
 
     </div>
-    <div style={searchModal ? {marginLeft:"72px"} : null} className='md:ml-[72px] xl:ml-[244px] dark:bg-black'>
+    <div className='md:ml-[72px] xl:ml-[244px] dark:bg-black'>
         <Outlet/>
     </div>
     <hr className='md:hidden'/>
