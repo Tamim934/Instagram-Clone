@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   datas: [],
-  searchModal:false
+  searchModal:false,
+  notificationModal:false
 };
 export const todosSlice = createSlice({
   name: "todos",
@@ -10,6 +11,9 @@ export const todosSlice = createSlice({
   reducers: {
     handleChangeSearch: (state, action) => {
       state.searchModal = action.payload
+    },
+    handleChangeNotification: (state, action) => {
+      state.notificationModal = action.payload
     }
   },
   extraReducers: (builder) => {},
@@ -19,6 +23,6 @@ export const todosSlice = createSlice({
 // export const { } =
 //   todosSlice.actions;
 
-export const {handleChangeSearch} = todosSlice.actions
+export const {handleChangeSearch, handleChangeNotification} = todosSlice.actions
 
 export default todosSlice.reducer;
