@@ -68,33 +68,40 @@ const Profile = () => {
 //  const [ProfileImage,setProfileImage]=useState()
 //  const [FirstName,setFirstName]=useState('')
   const [image, setImage] = useState("");
-  const [dateUpdated, setDateUpdated] = useState("");
-  const [gender, setGender] = useState(user.gender);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
+  const [dateUpdated, setDateUpdated] = useState("07-22-20");
+  const [gender, setGender] = useState(1);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
  
   const [locationId, setLocationId] = useState(1);
-  const [dob, setDob] = useState("");
-  const [occupation, setOccupation] = useState("");
-  const [about, setAbout] = useState(user.about);
+  const [dob, setDob] = useState("0001-01-01T00:00:00");
+  const [occupation, setOccupation] = useState("Not done yet");
+  const [about, setAbout] = useState("");
   
 
  
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
+  };
+  
 
+  
 
   const UpdateProfile = async (form) => {
     try {
-      axiosRequest.put(`UserProfile/update-UserProfile`, form, {
+      const response = await axiosRequest.put(`UserProfile/update-UserProfile`, form, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      
+      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
     }
   };
+  
 
  
   const handleSubmit = () => {
@@ -105,8 +112,8 @@ const Profile = () => {
     form.append("gender", gender);
     form.append("firstName", firstName);
     form.append("lastName", lastName);
-    form.append("locationId", locationId);
-    form.append("dob", dob);
+    form.append("locationId", 1);
+    form.append("dob", dateUpdated);
     form.append("occupation", occupation);
     form.append("about", about);
   
@@ -501,10 +508,7 @@ return(
     id="profilePic"
     name="profilePic"
     style={{ display: "none" }}
-    onChange={async (e) => {
-      setImage(e.target.files[0]);
-      await UpdateProfile();
-    }}
+    onChange={handleImageUpload}
    
   />
   </form>
@@ -522,7 +526,7 @@ return(
     value={firstName}
     onChange={(e) => setFirstName(e.target.value)}
   
-  />
+  /> 
               </div>
               <div className="flex gap-[40px] mt-[20px]">
                 <h1 className="text-[16px] font-medium">websites</h1>
@@ -554,14 +558,11 @@ return(
 
               <div className="flex gap-[50px] mt-[20px] ">
                 <h1 className="text-[16px] font-medium">Gender</h1>
-                <input
-    type="text"
-    placeholder="Prefer not to say"
-    value={gender}
-    onChange={(e) => setGender(e.target.value)}
-    className="pl-[10px] rounded-sm border outline-none w-[350px] h-[30px] text-black"
- 
-  />
+                <select value={gender} onChange={(e) => setGender(e.target.value)}>
+  <option value="0">0</option>
+  <option value="1">1</option>
+</select>
+
               </div>
               <div className="flex gap-[20px] mt-[20px] ">
                 <h1 className=" font-medium">
