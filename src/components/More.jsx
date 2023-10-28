@@ -5,8 +5,9 @@ import Menu from '@mui/material/Menu';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Switcher from './Switcher';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { handleChangeSearch } from '../reducers/instagram'
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -62,6 +63,8 @@ export default function CustomizedMenus() {
 
   const active  = localStorage.getItem("i18nextLng")
 
+  const dispatch = useDispatch()
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -85,7 +88,7 @@ export default function CustomizedMenus() {
 
         onClick={handleClick}
       >
-      <div className='p-[12px] w-[48px] xl:w-[220px] h-[48px] mr-[12px] xl:mr-0 transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
+      <div onClick={() => dispatch(handleChangeSearch(false))} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] mr-[12px] xl:mr-0 transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
         <div className='flex items-center gap-[16px]'>
           <div className='dark:hidden'>
             <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
