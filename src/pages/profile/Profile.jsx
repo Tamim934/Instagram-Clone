@@ -83,11 +83,14 @@ const Profile = () => {
 
 
 
-  const UpdateProfile = async (profileNew) => {
+  const UpdateProfile = async (form) => {
     try {
+      axiosRequest.put(`UserProfile/update-UserProfile`, form, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       
-      const { data } = await axiosRequest.put(`UserProfile/update-UserProfile`, profileNew);
-      console.log(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -96,26 +99,25 @@ const Profile = () => {
  
   const handleSubmit = () => {
     setIsLoading(true);
-
-    let profileNew = {
-      "image": image,
-      "dateUpdated": "",
-      "gender": gender,
-      "firstName": firstName,
-      "lastName": lastName,
-      "locationId": locationId,
-      "dob": "",
-      "occupation": occupation,
-      "about": about
-    }
-
-     UpdateProfile(profileNew);
-
+    let form = new FormData();
+    form.append("image", image);
+    form.append("dateUpdated", dateUpdated);
+    form.append("gender", gender);
+    form.append("firstName", firstName);
+    form.append("lastName", lastName);
+    form.append("locationId", locationId);
+    form.append("dob", dob);
+    form.append("occupation", occupation);
+    form.append("about", about);
+  
+    UpdateProfile(form);
+  
     setTimeout(() => {
       setIsLoading(false);
       setModal(false);
     }, 3000);
   }
+  
 
 
 
@@ -123,7 +125,7 @@ const Profile = () => {
 
 
 useEffect(() => {
-//  Updateprofile()
+
   getProfile();
   getFollowers();
 
