@@ -358,7 +358,7 @@ const Layout = () => {
             </div>
 
             <div style={searchModal ? {width:"48px"} : null} className='w-[48px] xl:w-[220px] h-[56px] pt-[4px]'>
-                <div onClick={openPostModal} style={searchModal ? {width:"48px"} : null} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer'>
+                <div onClick={openPostModal} style={searchModal ? {width:"48px"} : null} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px] cursor-pointer z-[1000]'>
 
                 <div className='flex items-center gap-[16px]'>
                 <div className='dark:hidden'>

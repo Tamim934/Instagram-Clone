@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { axiosRequest, getToken } from '../utilities/axiosRequest';
+import { axiosRequest, getToken } from '/src/utilities/axiosRequest';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import Grid from '@mui/material/Grid';
 import { IconButton } from '@mui/material';
-import CommentInput from './Addcomment';
+import CommentInput from '/src/components/Addcomment';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-const Post = ({ post}) => {
-  console.log(post)
+const Post = ({ post }) => { 
   const navigate = useNavigate();
+  const {id} =useParams()
+  const userId=id
+  console.log(post)
+  console.log(post)
   const [isClicked, setIsClicked] = useState(false);
 const [like, setLike] = useState(false);
-
 useEffect(() => {
   
   const savedIsClicked = localStorage.getItem('isClicked');
@@ -36,11 +39,10 @@ useEffect(() => {
     }
   }
 
-
  
   
   const [profile,setprofile]=useState([])
-  const userId = getToken()?.sid;
+ 
   const getProfile2 = async () => {
     try {
       const { data } = await axiosRequest.get(
@@ -69,10 +71,16 @@ useEffect(() => {
   const closeModal = () => {
     setIsDialogOpen(false);
   };
-  const PostId = getToken()?.pid;
-  console.log(PostId)
-
-  
+  const [posts, setPosts] = useState([]);
+  const getPosts = async () => {
+    try {
+      const { data } = await axiosRequest.get(`Post/get-posts?UserId=${userId}`);
+      setPosts(data.data);
+      console.log(data.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div 
       className="relative w-full h-full p-1"
@@ -103,12 +111,13 @@ useEffect(() => {
             <div className="flex items-center space-x-2 p-4 border-b border-gray-300 gap-[5px]">
               
               <img src={profile.image ? `http://65.108.148.136:8085/images/${profile.image}` : '/src/assets/imagesuserprofile/gep-worldwide-computer-network-building-youth-nigeria-others-829f6a97f991a96566e6ac5910746622.png'} alt="" className="w-8 h-8 rounded-full object-cover" />
-              <p className="font-bold">{profile.firstName}</p>
+              <p className="font-bold dark:text-black">{profile.firstName}</p>
             </div>
             <div className="overflow-y-auto h-[520px] mt-[20px] ml-[20px] items-center"> 
-              {post.comments.map((comment, index) => (
+            
+              {post.comments && post.comments.map((comment, index) => (
                 <div key={index} className="">
-                  {post.userLikes.map((like, index) => (
+                  {post.userLikes && post.userLikes.map((like, index) => (
                     <div key={index} className="flex pt-[15px]  justify-start gap-[15px]">
                       <img src={like.userPhoto ? `http://65.108.148.136:8085/images/${like.userPhoto}` : '/src/assets/imagesuserprofile/gep-worldwide-computer-network-building-youth-nigeria-others-829f6a97f991a96566e6ac5910746622.png'} alt="" className="w-8 h-8  rounded-full object-cover" />
                       <p className="font-bold dark:text-black">{like.userName}</p>
@@ -199,7 +208,7 @@ useEffect(() => {
                       </IconButton>
 </div>
                       <div>
-                      <IconButton onClick={() => navigate(`/home/messages`)}>
+                      <IconButton>
                         <svg
                           aria-label="Сохранить"
                           class="x1lliihq x1n2onr6"
@@ -237,9 +246,9 @@ useEffect(() => {
 };
 
 
-const Posts = () => {
+const Posts = ({userId}) => {
   const [posts, setPosts] = useState([]);
-  const userId = getToken()?.sid;
+
 
   const getPosts = async () => {
     try {
@@ -277,10 +286,8 @@ const Posts = () => {
 
 
   return (
-    
-    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3">
+    <div className="grid gap-4 grid-cols-2  sm:grid-cols-3 md:grid-cols-3">
       {posts.map((post, index) => (
-       
         <Post key={index} post={post}
          />
       ))}

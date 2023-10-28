@@ -120,6 +120,8 @@ const Home = () => {
   };
 
   const [more, setMore] = useState(false);
+
+
   return (
 // <<<<<<< Umed
     <div className="flex  dark:text-white  w-[100%]  justify-center lg:justify-between">
@@ -129,7 +131,7 @@ const Home = () => {
 //     <div className="flex  dark:text-white relative -z-50  w-[100%]  justify-center lg:justify-between">
 //       <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[80%] ml-auto">
 //         <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10 ">
-// >>>>>>> main
+{/* // >>>>>>> main */}
           <Swiper
             // spaceBetween={30}
             breakpoints={{
@@ -852,6 +854,10 @@ const Home = () => {
         </div>
       ) : null}
     </div>
+    </div>
+    </div>
+    </div>
+      
   );
 };
 
