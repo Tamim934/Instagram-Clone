@@ -3,10 +3,12 @@ import Stories from "./components/stories";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
+import userAvatar from "./img/userimage.jpg";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import "./style.css";
 // import required modules
 import { Navigation, Pagination } from "swiper/modules";
@@ -23,7 +25,8 @@ const Home = () => {
   // const LikePostApi = "http://65.108.148.136:8085/Post/like-Post?id";
 
   const [post, setPost] = useState([]);
-  const [postById, setPostById] = useState([]);
+  const [postById, setPostById] = useState({});
+  const [story, setStory] = useState([]);
   const [postComments, setPostComments] = useState([]);
   const [idx, setIdx] = useState(null); // const [postFavorites, setPostFavorites] = useState([]);
   const [userId, userUserId] = useState([]);
@@ -39,22 +42,23 @@ const Home = () => {
       console.log(error);
     }
   };
+  const getStories = async () => {
+    try {
+      const { data } = await axiosRequest.get(`Story/get-stories`);
+      setStory(data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const deleteComment = async (id) => {
     console.log(id);
     try {
       const { data } = await axiosRequest.delete(
         `Post/delete_comment?commentId=${id}`
       );
-      setPostById(data.data);
+      getPost();
+      // setPostById();
     } catch (error) {}
-  };
-  const getPostById = async (id) => {
-    try {
-      const { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
-      setPostById(data.data);
-    } catch (error) {
-      console.log(error);
-    }
   };
   const getPostComments = async () => {
     try {
@@ -67,6 +71,7 @@ const Home = () => {
 
   useEffect(() => {
     getPost();
+    getStories();
     // getPostById();
   }, []);
   const PostLike = async (id) => {
@@ -99,7 +104,7 @@ const Home = () => {
 
   const [more, setMore] = useState(false);
   return (
-    <div className="flex  dark:text-white  w-[100%]  justify-center lg:justify-between">
+    <div className="flex  dark:text-white  relative  w-[100%]  justify-center lg:justify-between">
       <div className="pb-20 md:w-[85%] lg:w-[60%]  w-[90%] ">
         <div className="w-[95%] md:w-[75%]  lg:w-[70%]  mx-auto  pt-10 ">
           <Swiper
@@ -133,45 +138,30 @@ const Home = () => {
             modules={[Navigation]}
             className="mySwiper"
           >
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Stories />
-            </SwiperSlide>
+            {story.map((e) => {
+              return (
+                <SwiperSlide
+                  key={e.id}
+                  className="gird dark:bg-black rounded-full h-auto items-center"
+                >
+                  {e.userAvatar == null || e.userAvatar == "" ? (
+                    <img
+                      src={userAvatar}
+                      alt=""
+                      className="w-[17%] dark:bg-black object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={`${import.meta.env.VITE_APP_FILES_URL}${
+                        e.userAvatar
+                      }`}
+                      className="w-auto h-auto  dark:bg-black rounded-[100%]"
+                      alt=""
+                    />
+                  )}
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </div>
 
@@ -190,25 +180,26 @@ const Home = () => {
                           className="flex items-center gap-2 "
                           onTouchMoveCapture={() => setProfileModal()}
                         >
-                          {/* <img
-                            className="w-[10%]"
-                            src="38f1a729-7d1b-407d-9368-7f39997c43b5.jpeg"
-                            // src="https://static.vecteezy.com/system/resources/previews/019/896/008/original/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png"
-                            alt=""
-                          /> */}
-                          <img
-                            src={`${import.meta.env.VITE_APP_FILES_URL}${
-                              el.avatar
-                            }`}
-                            className="w-[18%] rounded-full"
-                            alt=""
-                          />
+                          {el.avatar == null || el.avatar == "" ? (
+                            <img src={userAvatar} alt="" className="w-[18%]" />
+                          ) : (
+                            <img
+                              src={`${import.meta.env.VITE_APP_FILES_URL}${
+                                el.avatar
+                              }`}
+                              className="w-[18%] rounded-full"
+                              alt=""
+                            />
+                          )}
+
                           <p>
                             <Link
                               className="font-semibold"
                               to={"/home/profile"}
                             >{`${el.userName}`}</Link>
-                            <span className="text-gray-400 ml-2">• 1 дн.</span>
+                            <span className="text-gray-400 text-xs ml-2">
+                              {e.datePublished.slice(0, 10)}
+                            </span>
                           </p>
                         </div>
                       </Link>
@@ -271,7 +262,7 @@ const Home = () => {
                           <span className="x1ykxiw6 x1ahuga x4hg4is x3oybdh">
                             <svg
                               ariaLabel="Не нравится"
-                              className="x1lliihq x1n2onr6 xxk16z8 "
+                              className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
                               fill="red"
                               height="24"
                               role="img"
@@ -285,7 +276,7 @@ const Home = () => {
                         ) : (
                           <svg
                             ariaLabel="Нравится"
-                            className="x1lliihq x1n2onr6 xxk16z8 dark:text-white"
+                            className="x1lliihq x1n2onr6  dark:text-white"
                             color="rgb(38, 38, 38)"
                             fill="rgb(38, 38, 38)"
                             height="24"
@@ -300,7 +291,8 @@ const Home = () => {
                       </IconButton>
                       <IconButton
                         onClick={() => {
-                          getPostById(e.postId);
+                          // getPostById(e.postId);
+                          setPostById(e);
                           setCommentModal(true);
                           getPostComments();
                         }}
@@ -453,7 +445,7 @@ const Home = () => {
           style={{ background: "rgba(0, 0, 0, 0.5)" }}
           className="fixed  top-0 left-0 w-[100%] z-50 pt-10 h-[100vh] grid"
         >
-          <div className="grid  modal-content rounded-2xl">
+          <div className="grid  modal-content dark:border overflow-auto dark:shadow-2xl dark:bg-[#1c1e21] rounded-2xl">
             <button className="hover:bg-gray-300 text-red-600 font-bold rounded-2xl p-5">
               Пожаловаться
             </button>
@@ -502,33 +494,58 @@ const Home = () => {
             &times;
           </span>
           <div className=" w-[1200px]  modal-content">
-            <div className="grid h-[620px]  bg-black grid-cols-[1.3fr,1fr]">
-              <div className="self-center ">
-                <img
-                  src={`${import.meta.env.VITE_APP_FILES_URL}${
-                    postById.images
-                  }`}
-                  className=" self-center items-center w-auto"
-                  alt=""
-                />
+            <div className="overflow-auto grid grid-cols-2  h-[620px]   bg-black ">
+              <div className="self-center h-[620px]">
+                <div className="h-[620px]">
+                  <Swiper
+                    pagination={{
+                      type: "fraction",
+                    }}
+                    navigation={true}
+                    modules={[Pagination, Navigation]}
+                    className="mySwiper"
+                  >
+                    {postById?.images?.map((ell) => {
+                      return (
+                        <SwiperSlide className="dark:bg-black">
+                          <img
+                            onDoubleClick={() => {
+                              PostLike(ell?.postId);
+                            }}
+                            src={`${import.meta.env.VITE_APP_FILES_URL}${ell}`}
+                            className=" self-center h-[620px] items-center w-auto"
+                            alt=""
+                          />
+                        </SwiperSlide>
+                      );
+                    })}
+                  </Swiper>
+                </div>
               </div>
-
               <div className="py-3  px-3 bg-white">
                 <div className="top flex justify-between items-center">
                   <span className=" ">
-                    {userId.map((e) => {
-                      if (postById.userId == e.id) {
+                    {userId?.map((e) => {
+                      if (postById?.userId == e?.id) {
                         return (
                           <div className="flex items-center gap-4 ">
-                            <img
-                              src={`${import.meta.env.VITE_APP_FILES_URL}${
-                                e.avatar
-                              }`}
-                              className="w-[13%] rounded-full"
-                              alt=""
-                            />
+                            {e?.avatar == null || e.avatar == "" ? (
+                              <img
+                                src={userAvatar}
+                                alt=""
+                                className="w-[10%]"
+                              />
+                            ) : (
+                              <img
+                                src={`${import.meta.env.VITE_APP_FILES_URL}${
+                                  e?.avatar
+                                }`}
+                                className="w-[14%] rounded-full"
+                                alt=""
+                              />
+                            )}
                             <span className="text-md font-semibold">
-                              {e.userName}
+                              {e?.userName}
                             </span>
                           </div>
                         );
@@ -547,74 +564,20 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="overflow-auto h-[450px]  grid gap-5 px-10 py-10">
-                  {/* {post.map((e) => {
-                    return (
-                      <div className=" ">
-                        <div className="">
-                          {userId.map((el) => {
-                            if (el.id == e.userId) {
-                              return (
-                                <div className="grid grid-cols-[3fr,1fr]">
-                                  <Link
-                                    key={el.id}
-                                    className="w-[50%]"
-                                    to={"/profile"}
-                                  >
-                                    <div
-                                      className="flex items-center gap-2 "
-                                      onTouchMoveCapture={() =>
-                                        setProfileModal()
-                                      }
-                                    >
-                                      <img
-                                        src={`${
-                                          import.meta.env.VITE_APP_FILES_URL
-                                        }${el.avatar}`}
-                                        className="w-[15%]  rounded-full"
-                                        alt=""
-                                      />
-                                      <p>
-                                        <Link
-                                          className="font-semibold"
-                                          to={"/home/profile"}
-                                        >{`${el.userName}`}</Link>
-                                        <span className="text-gray-400 ml-2">
-                                          • 1 дн.
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </Link>
-                                  <div>
-                                    {e.comments.map((e) => {
-                                      if (e.comment.trim().length == 0) {
-                                        return null;
-                                      } else {
-                                        return <div>{e.comment}</div>;
-                                      }
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            }
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })} */}
-                  {postComments.map((e) => {
+                  {postComments?.map((e) => {
                     console.log(e);
                     return (
                       <>
                         <div className="flex flex-wrap items-center">
                           <div className="w-[45%]">
-                            {userId.map((el) => {
-                              if (e.userId == el.id) {
+                            {userId?.map((el) => {
+                              if (e?.userId == el?.id) {
                                 return (
                                   <div>
                                     <Link
-                                      key={el.id}
+                                      key={el?.id}
                                       className="w-[10%]"
-                                      to={"/profile"}
+                                      to={"home/profile"}
                                     >
                                       <div
                                         className="flex items-center gap-2 "
@@ -622,18 +585,28 @@ const Home = () => {
                                           setProfileModal()
                                         }
                                       >
-                                        <img
-                                          src={`${
-                                            import.meta.env.VITE_APP_FILES_URL
-                                          }${el.avatar}`}
-                                          className="w-[14%] rounded-full"
-                                          alt=""
-                                        />
+                                        {el.avatar == null ||
+                                        el.avatar == "" ? (
+                                          <img
+                                            src={userAvatar}
+                                            alt=""
+                                            className="w-[14%]"
+                                          />
+                                        ) : (
+                                          <img
+                                            src={`${
+                                              import.meta.env.VITE_APP_FILES_URL
+                                            }${el?.avatar}`}
+                                            className="w-[14%] rounded-full"
+                                            alt=""
+                                          />
+                                        )}
+
                                         <p>
                                           <Link
                                             className="font-semibold"
                                             to={"/home/profile"}
-                                          >{`${el.userName}`}</Link>
+                                          >{`${el?.userName}`}</Link>
                                           <span className="text-gray-400 ml-2">
                                             • 1 дн.
                                           </span>
