@@ -583,7 +583,7 @@ const Layout = () => {
 
         </div>
 
-        {searchModal ? (
+        {searchModal ? 
           <div
             className="searchModal absolute bottom-[0] left-[72px] z-50  w-[397px] h-[100vh] bg-white dark:bg-black overflow-y-auto"
             data-aos="fade-right"
