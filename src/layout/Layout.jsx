@@ -705,7 +705,7 @@ const Layout = () => {
       </Dialog>
 
     </div>
-    <div className='md:ml-[72px] xl:ml-[244px] dark:bg-black relative '>
+    <div className='md:ml-[72px] xl:ml-[244px] dark:bg-black relative'>
         <Outlet/>
     </div>
     <hr className='md:hidden'/>
