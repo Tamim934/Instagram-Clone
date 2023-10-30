@@ -12,8 +12,7 @@ const Post = ({ post }) => {
   const navigate = useNavigate();
   const {id} =useParams()
   const userId=id
-  console.log(post)
-  console.log(post)
+
   const [isClicked, setIsClicked] = useState(false);
 const [like, setLike] = useState(false);
 useEffect(() => {
@@ -76,7 +75,7 @@ useEffect(() => {
     try {
       const { data } = await axiosRequest.get(`Post/get-posts?UserId=${userId}`);
       setPosts(data.data);
-      console.log(data.data)
+    
     } catch (error) {
       console.log(error);
     }
