@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 import OceanWave from '../../assets/ReelsImg/userIcon.png'
 import userIcon from '../../assets/ReelsImg/userIcon.png'
-import userIconMain from '../../assets/ReelsImg/usericon.webp'
+import userImage from '../../assets/ReelsImg/userImage.png'
 import { axiosRequest, getToken } from '../../utilities/axiosRequest'
 
 const Reels = () => {
@@ -16,7 +16,7 @@ const Reels = () => {
   const [sendModal, setSendModal] = useState(false)
   const [settingsModal, setSettingsModal] = useState(false)
   const [like, setLike] = useState(false)
-  const [reelobj, setReelObj] = useState({})
+  const [reelobj, setReelObj] = useState([])
   const [ObjUser, setObjUser] = useState({})
   const [idRender, setIdRender] = useState(null)
   // console.log(reel)
@@ -32,8 +32,7 @@ const Reels = () => {
     try {
       const { data } = await axiosRequest.get("Post/get-posts")
       // console.log(data.data)
-      setReel(data.data)
-      setReelObj(data.data.find((e) => e.postId == idRender))
+      setReel(data.data.reverse())
 
     } catch (error) {
       console.error(error);
@@ -48,10 +47,20 @@ const Reels = () => {
         "postid": postID
       }
       const { data } = await axiosRequest.post(`Post/add_comment`, obj)
+      // getComment()
+      // setAddComm("")
+      // getReels()
+      // console.log(data);
+      // setCommentory([...commentory, data.data]);
+      setAddComm("");
       getComment()
-      setAddComm("")
-      getReels()
-      console.log(data);
+      setReelObj([...reelobj,
+      {
+        "comment": addComm,
+        "postid": postID
+      }
+      ])
+      // getReels();
     } catch (error) {
       console.error(error);
     }
@@ -73,7 +82,7 @@ const Reels = () => {
   const getUser = async () => {
     try {
       const { data } = await axiosRequest.get("/User/get-users")
-      // console.log(data.data.reverse());
+      // console.log(data.data);
       setUsers(data.data)
     } catch (error) {
       console.error(error);
@@ -83,9 +92,9 @@ const Reels = () => {
   // getComment 
   const getComment = async () => {
     try {
-      const { data } = await axiosRequest.get("Post/get-post-comments")
+      const { data } = await axiosRequest.get("Post/get-post-comments?PageSize=300")
       setCommentory(data.data)
-      console.log(data.data);
+      // console.log(data.data);
     } catch (error) {
       console.error(error);
     }
@@ -93,31 +102,35 @@ const Reels = () => {
 
   // getUsersById
 
-  function openModalComment(post, user, id) {
-    setCommentModal(true)
-    setReelObj(post)
-    setObjUser(user)
-    setIdRender(id)
-  }
+  // function openModalComment(post, user, id) {
+  //   setCommentModal(true)
+  //   setReelObj(post)
+  //   setObjUser(user)
+  //   setIdRender(id)
+  // }
 
   async function deletecoment(id, logic) {
     if (logic) {
       try {
         let { data } = await axiosRequest.delete(`Post/delete_comment?commentId=${id}`)
-        getReels()
         getComment()
       } catch (error) {
 
       }
     }
+
+    let ar = reelobj.filter((e) => {
+      return id != e.postCommentId
+    })
+    setReelObj(ar)
   }
 
 
   useEffect(() => {
     getReels()
-    // getPostById()
     getUser()
     getComment()
+    // getPostById()
   }, [])
 
   return (
@@ -150,8 +163,10 @@ const Reels = () => {
                   </div>
                   <div onClick={() => {
                     // setCommentModal(true)
-                    // setReelObj(e)
-                    openModalComment(e, e.postId, thisUser)
+                    setReelObj(e.comments)
+                    setCommentModal(true)
+
+                    setIdRender(e.postId)
                   }} className="mb-[15px]">
                     <svg aria-label="Комментировать" class="x1lliihq x1n2onr6" className='cursor-pointer' color="rgb(245, 245, 245)" fill="rgb(245, 245, 245)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Комментировать</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
                     <p className='text-[12px]'>{e.commentCount}</p>
@@ -177,11 +192,12 @@ const Reels = () => {
                       e.postLike ?
                         (e.postLikeCount * (-1)) + 1
                         &&
-                        <svg aria-label="Нравится" className='cursor-pointer' style={{ color: '#000', cursor: 'pointer' }} class="x1lliihq x1n2onr6" color="rgb(245, 245, 245)" fill="rgb(0,0,0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Нравится</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
-                        :
                         <svg xmlns="http://www.w3.org/2000/svg" style={{ cursor: 'pointer' }} fill="red" viewBox="0 0 24 24" strokeWidth={4} stroke="red" className="w-6 h-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
+                        :
+                        <svg aria-label="Нравится" className='cursor-pointer' style={{ color: '#000', cursor: 'pointer' }} class="x1lliihq x1n2onr6" color="rgb(245, 245, 245)" fill="rgb(0,0,0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Нравится</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
+
 
 
 
@@ -191,7 +207,9 @@ const Reels = () => {
                   </div>
                   <div onClick={() => {
                     setCommentModal(true)
-                    setReelObj(e)
+
+                    setReelObj(e.comments)
+                    setIdRender(e.postId)
                   }} className="mb-[15px]">
                     <svg aria-label="Комментировать" class="x1lliihq x1n2onr6" className='cursor-pointer' color="rgb(0,0,0)" fill="rgb(0,0,0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Комментировать</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
                     <p className='text-[12px] text-[#000]'>{e.commentCount}</p>
@@ -231,28 +249,35 @@ const Reels = () => {
               </div>
               <div className="h-[230px] p-[12px] overflow-auto">
                 {
-                  reelobj?.comments?.map((comment) => {
-                    console.log(comment.userId)
-                    let userProfile = users.find((u) => u.id == comment.userId)
-                    console.log(userProfile)
+                  reelobj?.map((comment) => {
+                    // console.log(comment.userId)
+                    // let userProfile = users.find((u) => u.id == comment.userId)
+                    // console.log(userProfile)
+                    console.log(comment)
                     return (
                       <div className='flex gap-[20px] mb-[19px]'>
                         <img className='rounded-[50%] w-[40px] h-[40px]' src=
                           {
-                            `${import.meta.env.VITE_APP_FILES_URL}${users.find((u) => u.id == comment.userId).avatar}` ?
-                              <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                              :
-                              `${import.meta.env.VITE_APP_FILES_URL}${users.find((u) => u.id == comment.userId).avatar}`
+                            
+                            `${import.meta.env.VITE_APP_FILES_URL}${users.find((u) => u.id == comment.userId)?.avatar}`
                           } alt="profile" />
+                       
+
                         <div className="">
-                          <p className='font-bold'>{users.find((u) => u.id == comment.userId).userName}</p>
+                          <p className='font-bold'>{users.find((u) => u.id == comment.userId)?.userName}</p>
                           <div className="">
                             <p>{comment?.comment}</p>
-                            <button className='text-[11px] bg-[grey]' onClick={()=>deletecoment(comment.postCommentId, comment.userId == myid)}>delete</button>
+                            <button className='text-[11px] bg-[grey]' onClick={() => {
+                              deletecoment(comment?.postCommentId, comment?.userId == myid)
+                              getComment()
+
+                            }}>delete</button>
                           </div>
                         </div>
                       </div>
+
                     )
+
                   })
                 }
               </div>
@@ -261,9 +286,12 @@ const Reels = () => {
                 <input value={addComm} onChange={(e) => setAddComm(e.target.value)} type="text" className='w-full h-[35px] pl-[20px] rounded-[20px] bg-[#000] border-[1px] border-[#fff]' />
                 {
                   addComm.trim().length == 0 ?
-                    <button style={{ display: addComm.trim().length > 0 ? 'block' : 'none' }} disabled={true} onClick={() => addComment(reelobj.postId)} className='absolute bottom-[25px] right-[32px] text-[13px] font-bold ml-[8px] text-[grey]'>Опубликовать</button>
+                    <button style={{ display: addComm.trim().length > 0 ? 'block' : 'none' }} disabled={true} onClick={() => addComment(idRender)} className='absolute bottom-[25px] right-[32px] text-[13px] font-bold ml-[8px] text-[grey]'>Опубликовать</button>
                     :
-                    <button style={{ display: addComm.trim().length > 0 ? 'block' : 'none' }} onClick={() => addComment(reelobj.postId)} className='absolute bottom-[25px] right-[32px] text-[13px] font-bold ml-[8px] text-[#0095f6]'>Опубликовать</button>
+                    <button style={{ display: addComm.trim().length > 0 ? 'block' : 'none' }} onClick={() => addComment(idRender)} className='absolute bottom-[25px] right-[32px] text-[13px] font-bold ml-[8px] text-[#0095f6]'>Опубликовать</button>
+                }
+                {
+                  // console.log(reelobj.postId)
                 }
               </div>
             </div> : null
@@ -277,7 +305,16 @@ const Reels = () => {
                 <p className='font-[600]'>Поделиться</p>
               </div>
               <div className="h-[230px] overflow-auto">
+                {
+                  users.map((e) => {
+                    console.log(`${import.meta.env.VITE_APP_FILES_URL}${users.avatar}`)
+                    return (
+                      <div className="">
 
+                      </div>
+                    )
+                  })
+                }
               </div>
               <div className="w-[86%] mx-auto py-[15px]">
                 {/* <input type="text" className='w-full h-[35px] pl-[20px]  border-[1px] border-[#fff]'/> */}
