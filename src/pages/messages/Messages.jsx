@@ -8,7 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TemporaryDrawer from "../../components/Drawer";
 import axios from "axios";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -22,7 +22,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: "#fff",
   border: "2px solid #000",
   boxShadow: 24,
   pt: 2,
@@ -35,16 +35,15 @@ const Messages = () => {
   const [user, setUser] = useState([]);
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState([]);
-  const [chatidd, setChatIDD] = useState(null);
   const [ChatId, setChatId] = useState();
   const [modal, setModal] = useState(false);
   const [user1, setuser1] = useState();
   const [open, setOpen] = React.useState(false);
   const [userId, setUserId] = useState();
-  const [text, setText] = useState("")
-  const [chatIdx,setChatIdx] = useState(null);
-
-
+  const [text, setText] = useState("");
+  const [chatIdx, setChatIdx] = useState(null);
+  const [ChatById, setChatById] = useState([]);
+  const [deleteidx, setdeleteidx] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -72,12 +71,22 @@ const Messages = () => {
   const handleClose3 = () => {
     setOpen3(false);
   };
+  const [open4, setOpen4] = React.useState(false);
+
+  const handleOpen4 = () => {
+    setOpen4(true);
+  };
+
+  const handleClose4 = () => {
+    setOpen4(false);
+  };
+
   // getUser
   async function getUser() {
     try {
       let { data } = await axiosRequest.get("User/get-users");
       setUser(data.data);
-      console.log(data.data);
+      // console.log(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -86,69 +95,61 @@ const Messages = () => {
   // getChat
   async function getChat() {
     try {
-      const { data } = await axiosRequest.get("Chat/get-chats");
+      const { data } = await axiosRequest.get(`Chat/get-chats`);
       setChat(data.data);
-      // console.log(chat);
     } catch (error) {
       console.log(error);
     }
   }
 
-  // getmessages
+  const navigate = useNavigate();
 
+  // getmessages
   async function getMessage(id) {
+    console.log(id);
     try {
-      let { data } = await axiosRequest.get(
-        `Chat/get-chat-by-id?chatId=${ChatId}`
-      );
+      let { data } = await axiosRequest.get(`Chat/get-chat-by-id?chatId=${id}`);
       setMessage(data.data.reverse());
-      console.log(data?.data);
-      setChatIDD(id);
+      setChatById(data.data);
+      console.log(data.data);
     } catch (error) {
       console.error(error);
     }
   }
 
+  // deletemessage
+  async function deleteMessage(id) {
+    try {
+      let { data } = await axiosRequest.delete(
+        `Chat/delete-message?massageId=${id}`
+      );
+      getMessage(chatIdx);
+      handleClose4();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-
-  // delete chat
-  // async function deleteChat(){
-  //       try {
-  //           let {data} = await axiosRequest.delete(`Chat/delete-chat?chatId=${deleteId}`)
-  //           getChat()
-  //           // setChatID(null)
-  //           setModalChat(false)
-  //           setChatID(null)
-  //       } catch (error) {
-            
-  //       }
-  //   }
-
-
-
-
-  // sendMessage
-  
-  async function sendMessage() { 
-    if (text.trim().length >0) {
+  // n
+  async function sendMessage() {
+    if (text.trim().length > 0) {
       try {
         console.log(chatIdx);
-        console.log(text);
+        // console.log(text);
         const obj = {
-          "chatId": chatIdx,
-          "messageText":text
-        }
+          chatId: chatIdx,
+          messageText: text,
+        };
         const { data } = await axiosRequest.put(`Chat/send-message`, obj);
-        getMessage(chatidd)
-        // console.log(dtaa.data);
-        setText("")
+        getMessage(chatIdx);
+        console.log(data.data);
+        setText("");
       } catch (error) {
-        
+        console.log(error);
       }
-    }
-    else {
-      getMessage(chatidd);
-      alert("Please enter your message")
+    } else {
+      getMessage(chatIdx);
+      alert("Please enter your message");
     }
   }
 
@@ -164,24 +165,19 @@ const Messages = () => {
       setModal(true);
       setChat(data.data);
       setSearchText("");
-      getMessage(chatidd);
-      setChatIDD(data?.data)
-      setChatIdx(data?.data)
-      console.log(chatIdx);
+      getChat();
+      setChatIdx(data?.data);
     } catch (error) {
       console.log(error);
     }
   }
   const userii = user.find((e) => e.id === userId);
-  // console.log(userii);
-
   useEffect(() => {
     getUser();
     getChat();
   }, []);
-
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end dark:bg-inherit dark:text-[white]">
       <div className="w-[100%] flex justify-center">
         <div className="lg:w-[38%] border-[1px]">
           <div className="sticky z-[1] ">
@@ -327,6 +323,7 @@ const Messages = () => {
                                     onClick={() => {
                                       setUserId(e.id);
                                       postChat(e.id);
+                                      setModal(false);
                                       console.log(e);
                                     }}
                                     className="flex items-center gap-[10px] py-[10px] px-[30px]  hover:bg-[#e6e6e6] rounded-[20px]"
@@ -334,13 +331,13 @@ const Messages = () => {
                                   >
                                     {e.avatar == null || e.avatar == "" ? (
                                       <img
-                                        className="w-[80px] h-[80px]"
+                                        className="w-[80px] h-[80px] object-cover"
                                         src={imageee}
                                         alt={"profile"}
                                       />
                                     ) : (
                                       <img
-                                        className="w-[80px] h-[80px] rounded-[50%]"
+                                        className="w-[80px] h-[80px] rounded-[50%] object-cover"
                                         src={`${
                                           import.meta.env.VITE_APP_FILES_URL
                                         }${e?.avatar}`}
@@ -374,40 +371,52 @@ const Messages = () => {
               <h1 className="text-[#969696] font-medium">Запросы</h1>
             </div>
           </div>
-          <div className="mt-[10px] h-[82vh]" style={{ overflow: "auto" }}>
-            {user.map((e) => {
-              return (
-                <div
-                  onClick={() => {
-                    setUserId(e.id);
-                    postChat(e.id);
-                  }}
-                  className="flex items-center gap-[10px] py-[15px] px-[40px]  hover:bg-[#d2d2d2]"
-                  key={e.id}
-                >
-                  {e.avatar == null || e.avatar == "" ? (
-                    <img
-                      onClick={() => handleOpen3}
-                      className="w-[80px] h-[80px]"
-                      src={imageee}
-                      alt={"profile"}
-                    />
-                  ) : (
-                    <img
-                      onClick={() => handleOpen3}
-                      className="w-[80px] h-[80px] rounded-[50%]"
-                      src={`${import.meta.env.VITE_APP_FILES_URL}${e?.avatar}`}
-                      alt={"profile"}
-                    />
-                  )}
+          <div
+            className="mt-[10px] h-[82vh] px-[20px]"
+            style={{ overflow: "auto" }}
+          >
+            {chat?.length > 0 &&
+              chat?.map((e) => {
+                let currentUser = user.find((us) => e.receiveUserId === us.id);
+                // console.log(e.);
+                return (
+                  <div
+                    onClick={() => {
+                      // setUserId(e.id);
+                      // getMessage();
+                      getMessage(e.chatId);
+                    }}
+                    className="flex items-center gap-[10px] py-[15px] px-[40px] rounded-[20px] hover:bg-[#d2d2d2]"
+                    key={e.chatId}
+                  >
+                    {currentUser?.avatar == null ||
+                    currentUser?.avatar == "" ? (
+                      <img
+                        onClick={() => handleOpen3}
+                        className="w-[80px] h-[80px] object-cover"
+                        src={imageee}
+                        alt={"profile"}
+                      />
+                    ) : (
+                      <img
+                        onClick={() => handleOpen3}
+                        className="w-[80px] h-[80px] rounded-[50%] object-cover"
+                        src={`${import.meta.env.VITE_APP_FILES_URL}${
+                          currentUser?.avatar
+                        }`}
+                        alt={"profile"}
+                      />
+                    )}
 
-                  <div className="">
-                    <h1 className="text-[19px] font-nornal">{e.userName}</h1>
-                    <h1>{e.email}</h1>
+                    <div className="">
+                      <h1 className="text-[19px] font-nornal">
+                        {currentUser?.userName}
+                      </h1>
+                      <h1>{currentUser?.email}</h1>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
         {modal ? (
@@ -431,7 +440,7 @@ const Messages = () => {
                     >
                       {userii.avatar == null || userii.avatar == "" ? (
                         <img
-                          className="w-[80%] h-[40%] bg-cover object-cover m-auto py-[40px]"
+                          className="w-[80%] h-[40%] bg-cover m-auto py-[40px] object-cover"
                           src={imageee}
                           alt={"profile"}
                         />
@@ -487,11 +496,11 @@ const Messages = () => {
                 <IconButton>
                   <Icon1 />
                 </IconButton>
-                <TemporaryDrawer />
+                <TemporaryDrawer chatId={chatIdx} getChatt={getChat} sendmodal={setModal} />
               </div>
             </div>
             <div className=" h-[80vh]" style={{ overflow: "auto" }}>
-              <div className="text-center py-[50px]">
+              <div className="text-center py-[50px] ">
                 {userii.avatar == null || userii.avatar == "" ? (
                   <img
                     className="m-auto rounded-[50%] my-[20px] w-[80px] h-[80px]"
@@ -511,18 +520,78 @@ const Messages = () => {
                 <p className="text-[#696969]">{userii.email}</p>
                 <div>
                   <button
+                    onClick={() => {
+                      navigate(`home/searchprofile/${userii.id}`);
+                    }}
                     className="px-[30px] py-[5px] rounded-[8px] bg-[#dedede] my-[14px] font-medium hover:bg-[#c5c5c5]"
-                    onClick={handleClickOpen}
                   >
-                    <Link to="/home/profile">Смотреть профиль</Link>
+                    Смотреть профиль
                   </button>
                   <div className="">
-                    { userId == myId ? (
+                    {userId == myId ? (
                       <div>
                         {message.map((elem) => {
                           return (
-                            <div className="px-[50px] text-end">
-                              <span className="text-[25px] font-normal my-[10px] bg-[#cbcbcb] px-[30px] rounded-[13px]">
+                            <div
+                              className="px-[50px] text-end"
+                              key={elem.messageId}
+                            >
+                              <Modal
+                                open={open4}
+                                onClose={handleClose4}
+                                aria-labelledby="parent-modal-title"
+                                aria-describedby="parent-modal-description"
+                                sx={{ marginLeft: "auto" }}
+                              >
+                                <Box
+                                  sx={{
+                                    ...style,
+                                    width: "30%",
+                                    borderRadius: "18px",
+                                    backgroundColor: "#fff",
+                                  }}
+                                >
+                                  <div className="text-[15px] text-center">
+                                    <h1 className="text-[23px] py-[20px] font-medium px-[30px]">
+                                      Отменить отправку сообщения?
+                                    </h1>
+                                    <p className="pb-[20px] font-normal px-[30px]">
+                                      This will remove the message for everyone
+                                      but people may have seen it already.
+                                      Unsent messages may still be included if
+                                      the conversation is reported.
+                                    </p>
+                                    <h1
+                                      className="border-y-[3px] py-[16px] font-medium text-[red] cursor-pointer"
+                                      onClick={() => {
+                                        deleteMessage(deleteidx), handleClose4;
+                                      }}
+                                    >
+                                      Отменить отправку
+                                    </h1>
+                                    <h1
+                                      className="font-bold cursor-pointer pt-[18px]"
+                                      onClick={handleClose4}
+                                    >
+                                      Отмена
+                                    </h1>
+                                  </div>
+                                </Box>
+                              </Modal>
+                              <div
+                                className="flex gap-[3px] font-bold text-[16px]  cursor-pointer  "
+                                onClick={handleOpen4}
+                              >
+                                <p>.</p>
+                                <p>.</p>
+                                <p>.</p>
+                              </div>
+                              <span
+                                className="text-[25px]  my-[10px] bg-[#3797F0] py-[3px] text-[white] px-[30px] rounded-[13px]"
+                                onClick={() => {
+                                  setdeleteidx(elem.messageId);
+                                }}
+                              >
                                 {elem.messageText}
                               </span>
                             </div>
@@ -533,8 +602,66 @@ const Messages = () => {
                       <div>
                         {message.map((elem) => {
                           return (
-                            <div className="px-[50px] text-start">
-                              <span className="text-[25px] font-normal my-[10px] bg-[#cbcbcb] px-[30px] rounded-[13px]">
+                            <div
+                              className="px-[50px] text-end flex items-center gap-[19px] cursor-pointer"
+                              key={elem.messageId}
+                            >
+                              <Modal
+                                open={open4}
+                                onClose={handleClose4}
+                                aria-labelledby="parent-modal-title"
+                                aria-describedby="parent-modal-description"
+                                sx={{ marginLeft: "auto" }}
+                              >
+                                <Box
+                                  sx={{
+                                    ...style,
+                                    width: "30%",
+                                    borderRadius: "18px",
+                                    backgroundColor: "#fff",
+                                  }}
+                                >
+                                  <div className="text-[15px] text-center">
+                                    <h1 className="text-[23px] py-[20px] font-medium px-[30px]">
+                                      Отменить отправку сообщения?
+                                    </h1>
+                                    <p className="pb-[20px] font-normal px-[30px]">
+                                      This will remove the message for everyone
+                                      but people may have seen it already.
+                                      Unsent messages may still be included if
+                                      the conversation is reported.
+                                    </p>
+                                    <h1
+                                      className="border-y-[3px] py-[16px] font-medium text-[red] cursor-pointer"
+                                      onClick={() => {
+                                        deleteMessage(deleteidx), handleClose4;
+                                      }}
+                                    >
+                                      Отменить отправку
+                                    </h1>
+                                    <h1
+                                      className="font-bold cursor-pointer pt-[18px]"
+                                      onClick={handleClose4}
+                                    >
+                                      Отмена
+                                    </h1>
+                                  </div>
+                                </Box>
+                              </Modal>
+                              <div
+                                className="flex gap-[3px] font-bold  text-[29px] cursor-pointer text-[white] hover:text-[black]"
+                                onClick={handleOpen4}
+                              >
+                                <p>.</p>
+                                <p>.</p>
+                                <p>.</p>
+                              </div>
+                              <span
+                                className="text-[25px] font-serif my-[10px] bg-[#cbcbcb] px-[30px] rounded-[13px]"
+                                onClick={() => {
+                                  setdeleteidx(elem.messageId);
+                                }}
+                              >
                                 {elem.messageText}
                               </span>
                             </div>
@@ -682,6 +809,17 @@ const Messages = () => {
                   </div>
                 )}
               </div>
+            </div>
+            <div className="">
+              {ChatById?.map((e) => {
+                // console.log(e);
+                return (
+                  <div className="" onClick={()=>getmessagebyid(e.id)} key={e.userId}>
+                    <h1>{e.userName}</h1>
+                    <img src={e.avatar} alt="" />
+                  </div>
+                )
+              })}
             </div>
           </div>
         ) : (
