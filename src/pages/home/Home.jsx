@@ -96,9 +96,12 @@ const Home = () => {
     }
   };
   const PostFavorites = async (id) => {
+    let obj = {
+      postId: id,
+    };
     try {
-      const { data } = await axiosRequest.post(`Post/add-PostFavorite=${id}`);
-      getPost(data.data);
+      const { data } = await axiosRequest.post(`Post/add-PostFavorite`, obj);
+      getPost();
       console.log(data);
     } catch (error) {
       console.error(error);
@@ -175,27 +178,35 @@ const Home = () => {
                   className=" dark:bg-black rounded-full h-auto items-center"
                 >
                   {e.userAvatar == null || e.userAvatar == "" ? (
-                    <img
-                      onClick={() => {
-                        setStoryModal(true);
-                        setStoryById(e);
-                      }}
-                      src={userAvatar}
-                      alt=""
-                      className="w-[150px], h-[150px], rounded-[50%]"
-                    />
+                    <div className="bg-gradient-to-r  from-purple-500 rounded-[50%] p-[4%] via-pink-500 to-yellow-500 w-[76px] h-[52px]">
+                      <div className="bg-white w-[100%] h-[100%] rounded-[50%]">
+                        <img
+                          onClick={() => {
+                            setStoryModal(true);
+                            setStoryById(e);
+                          }}
+                          src={userAvatar}
+                          alt=""
+                          className="w-[150px], h-[150px], p-[3%] rounded-[50%]"
+                        />
+                      </div>
+                    </div>
                   ) : (
-                    <img
-                      onClick={() => {
-                        setStoryModal(true);
-                        setStoryById(e);
-                      }}
-                      src={`${import.meta.env.VITE_APP_FILES_URL}${
-                        e.userAvatar
-                      }`}
-                      className="w-auto dark:bg-black rounded-[100%]"
-                      alt=""
-                    />
+                    <div className="bg-gradient-to-r  from-purple-500 rounded-[50%] p-[4%] via-pink-500 to-yellow-500 w-[76px] h-[52px]">
+                      <div className="bg-white w-[100%] h-[100%] rounded-[50%]">
+                        <img
+                          onClick={() => {
+                            setStoryModal(true);
+                            setStoryById(e);
+                          }}
+                          src={`${import.meta.env.VITE_APP_FILES_URL}${
+                            e.userAvatar
+                          }`}
+                          className="w-[100%] dark:bg-black p-[3%]  rounded-[100%]"
+                          alt=""
+                        />
+                      </div>
+                    </div>
                   )}
                 </SwiperSlide>
               );
@@ -203,10 +214,10 @@ const Home = () => {
           </Swiper>
         </div>
 
-        {post.map((e) => {
+        {post.map((e, index) => {
           return (
             <div
-              key={e.userId}
+              key={index}
               className="w-[80%] border-b pb-5 mb-5 dark:bg-black sm:w-[75%] md:w-[60%]  2xl:w-[52%] mx-auto mt-5"
             >
               <div className="flex items-center mb-2 justify-between">
@@ -222,14 +233,14 @@ const Home = () => {
                             <img
                               src={userAvatar}
                               alt=""
-                              className="w-[20%]  dark:bg-black h-[150px], rounded-[50%] md:w-[15%] lg:w-[13%] xl:w-[15%]"
+                              className="w-[20%] object-cover  dark:bg-black h-[150px], rounded-[50%] md:w-[15%] lg:w-[13%] xl:w-[15%]"
                             />
                           ) : (
                             <img
                               src={`${import.meta.env.VITE_APP_FILES_URL}${
                                 el.avatar
                               }`}
-                              className=" w-[20%] rounded-full"
+                              className=" w-[20%]  h-10 object-cover rounded-full"
                               alt=""
                             />
                           )}
@@ -278,7 +289,7 @@ const Home = () => {
                               onDoubleClick={() => {
                                 PostLike(e.postId);
                               }}
-                              className="rounded dark:bg-black"
+                              className="rounded object-cover h-10 dark:bg-black"
                               src={`${PostImagesApi}/${ell}`}
                               alt="img"
                             />
@@ -394,13 +405,13 @@ const Home = () => {
                     <div>
                       <IconButton
                         onClick={() => {
-                          PostFavorites(postById.postId);
+                          PostFavorites(e.postId);
                         }}
                       >
                         {e.postFavorite ? (
                           <svg
                             ariaLabel="Сохранить"
-                            className="x1lliihq x1n2onr6"
+                            className="x1lliihq x1n2onr6 dark:text-white"
                             color="rgb(0, 0, 0)"
                             fill="rgb(0, 0, 0)"
                             height="24"
@@ -421,7 +432,7 @@ const Home = () => {
                         ) : (
                           <svg
                             ariaLabel="Удалить"
-                            class="x1lliihq x1n2onr6 x5n08af"
+                            class="x1lliihq x1n2onr6 x5n08af dark:text-white"
                             fill="currentColor"
                             height="24"
                             role="img"
@@ -595,7 +606,7 @@ const Home = () => {
                               PostLike(ell?.postId);
                             }}
                             src={`${import.meta.env.VITE_APP_FILES_URL}${ell}`}
-                            className=" self-center h-[620px] items-center w-auto"
+                            className=" self-center object-cover  h-[620px] items-center w-[100%]"
                             alt=""
                           />
                         </SwiperSlide>
@@ -622,7 +633,7 @@ const Home = () => {
                                 src={`${import.meta.env.VITE_APP_FILES_URL}${
                                   e?.avatar
                                 }`}
-                                className="w-[14%] rounded-full"
+                                className="w-[23%] h-10  object-cover rounded-full"
                                 alt=""
                               />
                             )}
@@ -647,75 +658,79 @@ const Home = () => {
                 </div>
                 <div className="overflow-auto h-[420px]  grid gap-5 px-10 py-10">
                   {postComments?.map((e) => {
-                    console.log(e);
-                    return (
-                      <>
-                        <div className="flex flex-wrap items-center">
-                          <div className="w-[45%]">
-                            {userId?.map((el) => {
-                              if (e?.userId == el?.id) {
-                                return (
-                                  <div>
-                                    <Link
-                                      key={el?.id}
-                                      className="w-[10%]"
-                                      to={"home/profile"}
-                                    >
-                                      <div
-                                        className="flex items-center gap-2 "
-                                        onTouchMoveCapture={() =>
-                                          setProfileModal()
-                                        }
+                    if (post?.userId == postComments.userId) {
+                      console.log(e);
+                      return (
+                        <>
+                          <div className="flex flex-wrap justify-between items-center">
+                            <div className="w-[45%]">
+                              {userId?.map((el) => {
+                                if (e?.userId == el?.id) {
+                                  return (
+                                    <div>
+                                      <Link
+                                        key={el?.id}
+                                        className="w-[10%]"
+                                        to={"home/profile"}
                                       >
-                                        {el.avatar == null ||
-                                        el.avatar == "" ? (
-                                          <img
-                                            src={userAvatar}
-                                            alt=""
-                                            className="w-[14%]"
-                                          />
-                                        ) : (
-                                          <img
-                                            src={`${
-                                              import.meta.env.VITE_APP_FILES_URL
-                                            }${el?.avatar}`}
-                                            className="w-[14%] rounded-full"
-                                            alt=""
-                                          />
-                                        )}
+                                        <div
+                                          className="flex items-center gap-2 "
+                                          onTouchMoveCapture={() =>
+                                            setProfileModal()
+                                          }
+                                        >
+                                          {el.avatar == null ||
+                                          el.avatar == "" ? (
+                                            <img
+                                              src={userAvatar}
+                                              alt=""
+                                              className="w-[20%]"
+                                            />
+                                          ) : (
+                                            <img
+                                              src={`${
+                                                import.meta.env
+                                                  .VITE_APP_FILES_URL
+                                              }${el?.avatar}`}
+                                              className="w-[20%] h-10 object-cover rounded-full"
+                                              alt=""
+                                            />
+                                          )}
 
-                                        <p>
-                                          <Link
-                                            className="font-semibold"
-                                            to={"/home/profile"}
-                                          >{`${el?.userName}`}</Link>
-                                          <span className="text-gray-400 ml-2">
-                                            • 1 дн.
-                                          </span>
-                                        </p>
-                                      </div>
-                                    </Link>
-                                  </div>
-                                );
-                              }
-                              return;
-                            })}
-                          </div>
-                          <div>{e.comment}</div>
+                                          <p>
+                                            <Link
+                                              className="font-semibold"
+                                              to={"/home/profile"}
+                                            >{`${el?.userName}`}</Link>
 
-                          <div
-                            className=""
-                            onClick={() => {
-                              setMoreModal(true), setIdx(e.postCommentId);
-                            }}
-                          >
-                            <IconButton>
-                              <MoreHorizIcon />
-                            </IconButton>
+                                            <span className="text-gray-400 ml-2">
+                                              {e?.dateCommented.slice(5, 10)}
+                                            </span>
+                                          </p>
+                                        </div>
+                                      </Link>
+                                    </div>
+                                  );
+                                }
+                                return;
+                              })}
+                            </div>
+                            <div>{e.comment}</div>
+
+                            <div
+                              className=""
+                              onClick={() => {
+                                setMoreModal(true), setIdx(e.postCommentId);
+                              }}
+                            >
+                              <IconButton>
+                                <MoreHorizIcon />
+                              </IconButton>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                    );
+                        </>
+                      );
+                    }
                   })}
                 </div>
                 <div>
