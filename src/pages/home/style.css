@@ -79,3 +79,10 @@ body {
   text-align: center;
   align-items: center;
 }
+.modal-content2 {
+  width: 400px;
+  margin: 0 auto 100px auto;
+  height: 620px;
+  text-align: center;
+  align-items: center;
+}
