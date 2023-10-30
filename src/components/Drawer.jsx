@@ -12,20 +12,21 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { IconButton } from "@mui/material";
 import Switch from "@mui/material/Switch";
+import { axiosRequest } from "../utilities/axiosRequest";
 
 
 
 const label = { inputProps: { "aria-label": "Size switch demo" } };
 
 
-export default function TemporaryDrawer() {
+export default function TemporaryDrawer({ chatId, getChatt, sendmodal }) {
   const [state, setState] = React.useState({
     top: false,
     left: false,
     bottom: false,
     right: false,
   });
-
+  // console.log(chatId);
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -36,6 +37,21 @@ export default function TemporaryDrawer() {
 
     setState({ ...state, [anchor]: open });
   };
+
+  // delete chat
+
+  async function deleteChat(chatId) {
+    try {
+      let { data } = await axiosRequest.delete(
+        `Chat/delete-chat?chatId=${chatId}`
+      );
+      getChatt();
+      setState(false);
+      sendmodal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const list = (anchor) => (
     <Box
@@ -80,18 +96,17 @@ export default function TemporaryDrawer() {
           </div>
         </div>
       </div>
-        <div className=" text-[15px] font-normal text-[red] px-[40px] py-[40px]">
-          <h1>Пожаловаться</h1>
-          <h1 className="py-[19px]">Заблокировать</h1>
-          <h1>Удалить чат</h1>
-        </div>
-      
+      <div className=" text-[16px] font-medium text-[red] px-[40px] py-[40px]">
+        <h1>Пожаловаться</h1>
+        <h1 className="py-[19px]">Заблокировать</h1>
+        <button onClick={() => deleteChat(chatId)}>Удалить чат</button>
+      </div>
     </Box>
   );
 
   return (
     <div>
-      {[ "right"].map((anchor) => (
+      {["right"].map((anchor) => (
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>
             {
