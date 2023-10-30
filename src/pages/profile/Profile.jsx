@@ -68,14 +68,14 @@ const Profile = () => {
 //  const [ProfileImage,setProfileImage]=useState()
 //  const [FirstName,setFirstName]=useState('')
   const [image, setImage] = useState("");
-  const [dateUpdated, setDateUpdated] = useState("07-22-20");
+  const [DateUpdated, setDateUpdated] = useState("");
   const [gender, setGender] = useState(1);
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [lastName, setLastName] = useState("Softclub");
  
   const [locationId, setLocationId] = useState(1);
-  const [dob, setDob] = useState("0001-01-01T00:00:00");
-  const [occupation, setOccupation] = useState("Not done yet");
+  const [dob, setDob] = useState("");
+  const [occupation, setOccupation] = useState("un");
   const [about, setAbout] = useState("");
   
 
@@ -91,7 +91,7 @@ const Profile = () => {
 
   const UpdateProfile = async (form) => {
     try {
-      const response = await axiosRequest.put(`UserProfile/update-UserProfile`, form, {
+      const {data} = await axiosRequest.put(`UserProfile/update-UserProfile`, form, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -108,12 +108,12 @@ const Profile = () => {
     setIsLoading(true);
     let form = new FormData();
     form.append("image", image);
-    form.append("dateUpdated", dateUpdated);
+    form.append("DateUpdated", DateUpdated);
     form.append("gender", gender);
     form.append("firstName", firstName);
     form.append("lastName", lastName);
-    form.append("locationId", 1);
-    form.append("dob", dateUpdated);
+    form.append("locationId", locationId);
+    form.append("dob",dob);
     form.append("occupation", occupation);
     form.append("about", about);
   
@@ -559,8 +559,8 @@ return(
               <div className="flex gap-[50px] mt-[20px] ">
                 <h1 className="text-[16px] font-medium">Gender</h1>
                 <select value={gender} onChange={(e) => setGender(e.target.value)}>
-  <option value="0">0</option>
-  <option value="1">1</option>
+  <option value="0">Male</option>
+  <option value="1">Female</option>
 </select>
 
               </div>

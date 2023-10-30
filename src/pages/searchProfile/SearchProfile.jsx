@@ -41,22 +41,45 @@ const SearchProfile = () => {
  const [Userfollowers,setUserfollowers]=useState()
  const [Userfollowing,setUserfollowing]=useState()
  
- const getFollowers = async () => {
+ const getFollowers = async (userId) => {
   try {
-    const { data } = await axiosRequest.get(`/UserProfile/CounterProfile`);
+    const { data } = await axiosRequest.get(`/UserProfile/CounterProfile?id=${userId}`);
 
     console.log(data);
- setuserpost(data.data.post)
- setUserfollowers(data.data.follower)
- setUserfollowing(data.data.following)
+    setuserpost(data.data.post)
+    setUserfollowers(data.data.follower)
+    setUserfollowing(data.data.following)
   } catch (error) {
     console.log(error);
   }
- };
- useEffect(() => {
+};
+const getFollowingRelationshipById = async (userId) => {
+  try {
+    const { data } = await axiosRequest.get(
+      `FollowingRelationShip/get-FollowingRelationShip-by-id?id=${userId}`
+    );
+console.log(userId)
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const getUser=async()=>{
+  try {
+    const {data}= await axiosRequest.get(`User/get-User-by-id?${userId}`)
+    console.log(data.data )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+useEffect(() => {
   getProfile();
-  getFollowers();
+  getFollowers(userId);
+  getFollowingRelationshipById(userId)
 }, []);
+
 
   return (
     <div className=" dark:bg-black dark:text-white">
