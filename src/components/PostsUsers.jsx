@@ -7,11 +7,52 @@ import Grid from '@mui/material/Grid';
 import { IconButton } from '@mui/material';
 import CommentInput from './Addcomment';
 import { useNavigate } from 'react-router-dom';
+
 const Post = ({ post}) => {
-  console.log(post)
+ 
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
 const [like, setLike] = useState(false);
+//comment
+
+const [commentsWithUser, setCommentsWithUser] = useState([]);
+const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchCommentsWithUser = async () => {
+      const commentsWithUser = await Promise.all(post.comments.map(async (comment) => {
+        try {
+          const { data } = await axiosRequest.get(`UserProfile/get-UserProfile-by-id?id=${comment.userId}`);
+          setUser(data);
+        
+        
+          return { ...comment, user: data };
+        } catch (error) {
+          console.error(`Error fetching user profile for comment ${comment.id}:`, error);
+        }
+      }));
+      setCommentsWithUser(commentsWithUser);
+    };
+
+    fetchCommentsWithUser();
+  }, [post.comments]);  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 useEffect(() => {
   
@@ -69,8 +110,7 @@ useEffect(() => {
   const closeModal = () => {
     setIsDialogOpen(false);
   };
-  const PostId = getToken()?.pid;
-  console.log(PostId)
+
 
   
   return (
@@ -106,17 +146,19 @@ useEffect(() => {
               <p className="font-bold">{profile.firstName}</p>
             </div>
             <div className="overflow-y-auto h-[520px] mt-[20px] ml-[20px] items-center"> 
-              {post.comments.map((comment, index) => (
-                <div key={index} className="">
-                  {post.userLikes.map((like, index) => (
-                    <div key={index} className="flex pt-[15px]  justify-start gap-[15px]">
-                      <img src={like.userPhoto ? `http://65.108.148.136:8085/images/${like.userPhoto}` : '/src/assets/imagesuserprofile/gep-worldwide-computer-network-building-youth-nigeria-others-829f6a97f991a96566e6ac5910746622.png'} alt="" className="w-8 h-8  rounded-full object-cover" />
-                      <p className="font-bold dark:text-black">{like.userName}</p>
-                      <p className='dark:text-black'>{comment.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              ))}
+            {commentsWithUser.map((comment, index) => (
+        comment.user ? (
+          <div key={index} className="flex pt-[15px] justify-start gap-[15px]">
+            <img 
+              src={comment.user.image ? `http://65.108.148.136:8085/images/${comment.user.image}` : '/src/assets/imagesuserprofile/gep-worldwide-computer-network-building-youth-nigeria-others-829f6a97f991a96566e6ac5910746622.png'} 
+              alt="" 
+              className="w-8 h-8 rounded-full object-cover" 
+            />
+            <p className="font-bold dark:text-black">{comment.  firstName}</p>
+            <p className='dark:text-black'>{comment.comment}</p>
+          </div>
+        ) : null
+      ))}
             </div>
             <div className="p-4">
               <div className='flex justify-between'>
@@ -278,7 +320,7 @@ const Posts = () => {
 
   return (
     
-    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3">
+    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3 z-20">
       {posts.map((post, index) => (
        
         <Post key={index} post={post}

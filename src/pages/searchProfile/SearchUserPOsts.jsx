@@ -9,6 +9,8 @@ import CommentInput from '/src/components/Addcomment';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 const Post = ({ post }) => { 
+
+  
   const navigate = useNavigate();
   const {id} =useParams()
   const userId=id

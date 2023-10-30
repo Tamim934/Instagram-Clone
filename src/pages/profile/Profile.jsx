@@ -96,9 +96,9 @@ const Profile = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response.data);
+      console.log(data);
     } catch (error) {
-      console.log(error.response.data);
+      console.log(data);
     }
   };
 
@@ -108,12 +108,12 @@ const Profile = () => {
     setIsLoading(true);
     let form = new FormData();
     form.append("Image", image);
-    // form.append("DateUpdated", DateUpdated);
+ 
     form.append("Gender", gender);
     form.append("FirstName", firstName);
     form.append("LastName", lastName);
     form.append("LocationId", locationId);
-    // form.append("DOB", dob);
+ 
     form.append("Occupation", occupation);
     form.append("About", about);
 
@@ -555,9 +555,9 @@ const Profile = () => {
 
                   <div className="flex gap-[50px] mt-[20px] ">
                     <h1 className="text-[16px] font-medium">Gender</h1>
-                    <select value={gender} onChange={(e) => setGender(e.target.value)}>
-                      <option value="0">Male</option>
-                      <option value="1">Female</option>
+                    <select className="text-[black]" value={gender} onChange={(e) => setGender(e.target.value)}>
+                      <option value="0">Female</option>
+                      <option value="1">Male</option>
                     </select>
 
                   </div>

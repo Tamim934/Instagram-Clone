@@ -583,7 +583,7 @@ const Layout = () => {
 
         </div>
 
-        {searchModal ? (
+        {searchModal ? 
           <div
             className="searchModal absolute bottom-[0] left-[72px] z-50  w-[397px] h-[100vh] bg-white dark:bg-black overflow-y-auto"
             data-aos="fade-right"
@@ -705,7 +705,7 @@ const Layout = () => {
       </Dialog>
 
     </div>
-    <div className='md:ml-[72px] xl:ml-[244px] dark:bg-black relative -z-50'>
+    <div className='md:ml-[72px] xl:ml-[244px] dark:bg-black relative '>
         <Outlet/>
     </div>
     <hr className='md:hidden'/>
