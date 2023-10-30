@@ -9,7 +9,7 @@ const FYP = () => {
         <p>amsurur</p>
       </p>
       <a href="" className="text-blue-400 text-sm font-bold">
-        Подписаться
+        Follow
       </a>
     </div>
   );

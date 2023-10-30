@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Switcher from './Switcher';
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -53,6 +54,14 @@ export default function CustomizedMenus() {
 
   const searchModal = useSelector((store) => store.data.searchModal)
 
+  const {t, i18n} = useTranslation()
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language)
+  }
+
+  const active  = localStorage.getItem("i18nextLng")
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -84,7 +93,7 @@ export default function CustomizedMenus() {
           <div className='hidden dark:block'>
             <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(255, 255, 255)" fill="rgb(255, 255, 255)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
           </div>
-          <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>Ещё</span>
+          <span style={searchModal ? {display:"none"} : null} className='text-black dark:text-white text-[16px] hidden xl:block'>{t("layout.more")}</span>
         </div>
       </div>
       </Button>
@@ -99,12 +108,17 @@ export default function CustomizedMenus() {
         onClose={handleClose}
       >
         <div className='dark:bg-black dark:rounded-[2px]'>
-          <span className='text-black dark:text-white text-[16px] flex justify-center font-medium'>Переключить режим</span>
+          <span className='text-black dark:text-white text-[16px] flex justify-center font-medium'>{t("layout.switchappearance")}</span>
           <Divider sx={{ my: 0.5 }} />
           <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px"}}>
             <Switcher/>
-            <span className='text-black dark:text-white text-[14px]'>Ночной режим</span>
+            <span className='text-black dark:text-white text-[14px]'>{t("layout.darkmode")}</span>
           </Box>
+          <Divider sx={{ my: 0.5 }} />
+          <ul className='flex justify-center items-center gap-[8px] rounded-[4px] bg-[#262626] dark:border-[2px] dark:border-black'>
+            <li className='text-[14px] font-medium cursor-pointer' style={{color: active == "en" ? "lime" : "lightgray"}} onClick={() => changeLanguage("en")}>EN</li>
+            <li className='text-[14px] font-medium cursor-pointer' style={{color: active == "ru" ? "lime" : "lightgray"}} onClick={() => changeLanguage("ru")}>RU</li>
+          </ul>
         </div>
 
       </StyledMenu>
