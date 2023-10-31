@@ -9,17 +9,28 @@ import NotFound from './pages/notfound/NotFound'
 import SearchProfile from "./pages/searchProfile/SearchProfile"
 import Login from "./pages/Login/Login"
 import Regestrition from "./pages/Regeistretion/Regestrition"
+import AuthCheck from "./utils/AuthCheck"
+import ProtectedRoute from "./utils/ProtectedRoute"
 
 function App() {
 
   const isRouter = createBrowserRouter([
     {
       path: "/",
-      element: <Login />
+      element: (
+        <AuthCheck>
+          <Login />
+        </AuthCheck>
+      )
+
     },
     {
       path: "/home",
-      element: <Layout />,
+      element: (
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           index: true,
@@ -46,14 +57,14 @@ function App() {
           path: "profile",
           element: <Profile />,
         },
-        
-        
+
+
 
       ],
     },
     {
       path: "regestrition",
-      element: <Regestrition/>,
+      element: <Regestrition />,
     },
     {
       path: "*",
