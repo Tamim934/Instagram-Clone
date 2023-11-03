@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import '../App.css'
 import { axiosRequest } from '../utilities/axiosRequest'
 import { useNavigate } from 'react-router-dom'
@@ -47,6 +47,7 @@ const Layout = () => {
   // notification ↓
 
   const notificationModal = useSelector((store) => store.data.notificationModal)
+  const isRef = useRef(null)
 
   // notification ↑
   
@@ -67,7 +68,7 @@ const Layout = () => {
   const [posts, setPosts] = useState([]);
   const [show, setShow] = useState([]);
   const navigate = useNavigate();
-
+console.log(show)
   function myImage(event) {
     let arrImg = [];
     for (let i = 0; i < event.target.files.length; i++) {
@@ -102,7 +103,7 @@ const Layout = () => {
       let file = await FileToBase64(files[i]);
       arrImg.push({
         id: Date.now(),
-        name: file,
+        name: file
       });
     }
     setShow(arrImg);
@@ -680,7 +681,8 @@ const Layout = () => {
 
           {show?.map((e) => {
             return (
-              <SwiperSlide><img src={e.name} alt="" /></SwiperSlide>
+              // <SwiperSlide><img src={e.name} alt="" /></SwiperSlide>
+              <SwiperSlide>{!e.name.includes(".mp4") ? <img src={e.name} alt="" /> : <video controls src={e.name}/>}</SwiperSlide>
             )
           })}
 
@@ -689,7 +691,7 @@ const Layout = () => {
         <Box sx={{display:"flex", flexDirection:"column", justifyContent:"center"}}>
           <form method="post" enctype="multipart/form-data" className='m-auto'>
             <label class="input-file">
-              <input type="file" name="file" multiple={true} onChange={(event) => {myImage(event), handlePosts(event.target.files)}}/>
+              <input type="file" name="file" multiple={true} accept='' onChange={(event) => {myImage(event), handlePosts(event.target.files)}}/>
               <span className='text-white font-medium'>{t("layout.selectfromcomputer")}</span>
             </label>
           </form>
