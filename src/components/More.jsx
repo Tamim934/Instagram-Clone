@@ -8,6 +8,8 @@ import Switcher from './Switcher';
 import { useSelector, useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { handleChangeSearch, handleChangeNotification } from '../reducers/instagram'
+import { destroyToken } from '../utilities/axiosRequest';
+import { useNavigate } from 'react-router-dom';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -67,6 +69,8 @@ export default function CustomizedMenus() {
 
   const dispatch = useDispatch()
 
+  const navigate = useNavigate()
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -90,7 +94,7 @@ export default function CustomizedMenus() {
 
         onClick={handleClick}
       >
-      <div onClick={() => dispatch(handleChangeSearch(false), handleChangeNotification(false))} className='p-[12px] w-[48px] xl:w-[220px] h-[48px] mr-[12px] xl:mr-0 transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
+      <div className='p-[12px] w-[48px] xl:w-[220px] h-[48px] mr-[12px] xl:mr-0 transition ease-in-out delay-100 hover:bg-[#F2F2F2] dark:hover:bg-[#1A1A1A] rounded-[8px]'>
         <div className='flex items-center gap-[16px]'>
           <div className='dark:hidden'>
             <svg aria-label="Настройки" class="x1lliihq x1n2onr6" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Настройки</title><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="4" y2="4"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="12" y2="12"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="3" x2="21" y1="20" y2="20"></line></svg>
@@ -114,18 +118,22 @@ export default function CustomizedMenus() {
       >
         <div className='dark:bg-black dark:rounded-[2px]'>
           <span className='text-black dark:text-white text-[16px] flex justify-center font-medium'>{t("layout.switchappearance")}</span>
-          <Divider sx={{ my: 0.5 }} />
+          <Divider sx={{ my: 0.5 }} className='dark:hidden'/>
+          <hr className='hidden dark:block w-[98%] m-auto my-0.5' />
           <Box sx={{display:"flex", justifyContent:"center", alignItems:"center", gap:"12px"}}>
             <Switcher/>
             <span className='text-black dark:text-white text-[14px]'>{t("layout.darkmode")}</span>
           </Box>
-          <Divider sx={{ my: 0.5 }} />
-          <ul className='flex justify-center items-center gap-[8px] rounded-[4px] bg-[#262626] dark:border-[2px] dark:border-black'>
+          <Divider sx={{ my: 0.5 }} className='dark:hidden'/>
+          <hr className='hidden dark:block w-[98%] m-auto my-0.5' />
+          <ul className='flex justify-center items-center gap-[8px] rounded-[4px] dark:rounded-[6px] bg-[#262626] dark:border-[2px] dark:border-black'>
             <li className='text-[14px] font-medium cursor-pointer' style={{color: active == "en" ? "lime" : "lightgray"}} onClick={() => changeLanguage("en")}>EN</li>
             <li className='text-[14px] font-medium cursor-pointer' style={{color: active == "ru" ? "lime" : "lightgray"}} onClick={() => changeLanguage("ru")}>RU</li>
           </ul>
+          <Divider sx={{ mt: 0.5 }} className='dark:hidden'/>
+          <hr className='hidden dark:block w-[98%] m-auto my-0.5' />
+          <span onClick={() => {destroyToken(), navigate("/")}} className='text-black dark:text-white text-[14px] dark:ml-[2.5px] cursor-pointer'>{t("layout.logout")}</span>
         </div>
-
       </StyledMenu>
     </div>
   );
