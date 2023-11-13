@@ -320,7 +320,7 @@ const Posts = () => {
 
   return (
     
-    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3 z-20">
+    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3">
       {posts.map((post, index) => (
        
         <Post key={index} post={post}
