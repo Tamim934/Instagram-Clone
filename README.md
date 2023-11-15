@@ -7,7 +7,7 @@
 This project is a clone of the popular social media app, Instagram. It replicates the core features of Instagram, allowing users to post pictures, follow other users, and interact with posts.
 
 ## Installation
-1. Clone the repository: `git clone https://github.com/Tamim934/Instagram-Clone/`
+1. Clone the repository: `git clone https://github.com/Tamim934/Instagram-Clone`
 2. Navigate to the project directory: `cd Instagram-Clone`
 3. Install the dependencies: `npm install`
 4. Start the server: `npm run dev`
